@@ -19,7 +19,7 @@ const appRoutes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthenticationGuard] },
   { path: 'manage-dashboards', component: ManageDashboardsComponent, canActivate: [AuthenticationGuard] },
   { path: 'demo', component: DemoComponent, canActivate: [AuthenticationGuard] },
-  { path: 'iceGrid', component: IceGridHolderComponent, canActivate: [AuthenticationGuard] },
+  { path: 'iceGrid/:id', component: IceGridHolderComponent, canActivate: [AuthenticationGuard] },
   /*{ path: 'user-management', component: UserComponent, canActivate: [AuthGuard] },*/
   { path: '', redirectTo: '/create-widget', pathMatch: 'full' },//default path
   { path: '**', component: PageNotFoundComponent, canActivate: [AuthenticationGuard] }

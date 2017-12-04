@@ -6,6 +6,7 @@ import { AdItem } from './aditem';
 import { FirstComponentComponent } from './first-component/first-component.component';
 import { ToPumpComponent } from './to-pump/to-pump.component';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
 @Injectable()
 export class DynamicServiceService {
 
@@ -65,6 +66,41 @@ export class DynamicServiceService {
     })
 
   }
+
+  getPieChartData(): Observable<any> {
+    return this.http.get("./assets/input.json").map((response) => {
+      console.log("Chart Response");
+      console.log(response.json().data);
+      return [new AdItem(PieChartComponent, {
+        data: {
+          labels: ['A', 'B', 'C'],
+          datasets: [
+            {
+              data: [300, 50, 100],
+              backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+              ],
+              hoverBackgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+              ]
+            }]
+        }
+      })];
+    });
+
+  }
+
+  getDashboards(): Observable<any> {
+    return this.http.get("./assets/dashboards.json").map((response) => {
+      return response.json();
+    }
+    )
+  }
+
 
 }
 

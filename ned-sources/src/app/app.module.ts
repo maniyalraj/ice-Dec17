@@ -48,6 +48,7 @@ import { CreateWidgetComponent } from './modules/inner-pages/create-widget/creat
 import { DashboardComponent } from './modules/inner-pages/dashboard/dashboard.component';
 import { ManageDashboardsComponent } from './modules/inner-pages/manage-dashboards/manage-dashboards.component';
 import { DemoComponent } from './modules/programming-services/demo/demo.component';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { DemoComponent } from './modules/programming-services/demo/demo.componen
     CreateWidgetComponent,
     DashboardComponent,
     ManageDashboardsComponent,
-    DemoComponent
+    DemoComponent,
+    PieChartComponent
     // DynamicComponentLoaderDirective
   ],
   imports: [
@@ -104,7 +106,7 @@ import { DemoComponent } from './modules/programming-services/demo/demo.componen
     LookupService,
     DynamicServiceService
   ],
-  entryComponents:[FirstComponentComponent,ToPumpComponent,ViewHolderComponent,BarChartComponent],
+  entryComponents:[FirstComponentComponent,ToPumpComponent,ViewHolderComponent,BarChartComponent,PieChartComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

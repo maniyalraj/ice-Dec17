@@ -2,18 +2,21 @@
         <div class="row">
                 <div class="manage-dashboard col-md-12 pn">
                         <div class="heading ">
-                               <div class="col-md-10"> <h2>Manage Dashboards</h2></div>
-                             <div class="col-md-2">
-                               <div class="create-icon  pull-right" pTooltip="New Dashboard" tooltipPosition="left">
-                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                <div class="col-md-10">
+                                        <h2>Manage Dashboards</h2>
                                 </div>
+                                <div class="col-md-2">
+                                        <div class="create-icon  pull-right" pTooltip="New Dashboard" tooltipPosition="left">
+                                                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                        </div>
                                 </div>
                         </div>
                 </div>
         </div>
         <div class="row">
                 <div class="col-md-12">
-                        <p-dataTable [value]="cars" sortMode="multiple" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]">
+                        <p-dataTable #dt [value]="cars" sortMode="multiple" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]"
+                                [immutable]=false selectionMode="single">
                                 <p-column field="" header="" styleClass="col-icon">
                                         <ng-template let-car="rowData" pTemplate="body">
                                                 <a href="#">
@@ -24,15 +27,26 @@
                                                 </a>
                                         </ng-template>
                                 </p-column>
-                                <p-column field="Name" header="Name" [sortable]="true" class="col-md-3" [filter]="true" filterPlaceholder="Search"></p-column>
+
+                                <p-column header="Name" [sortable]="true" class="col-md-3" [filter]="true" filterPlaceholder="Search">
+                                        <ng-template let-car="rowData" pTemplate="body">
+                                                <span class="ui-cell-data dashboardName">
+
+                                                        <p class="" (click)=test(car)> {{car.Name}}</p>
+
+                                                </span>
+                                        </ng-template>
+
+                                </p-column>
+
                                 <p-column field="Owner" header="Owner" [sortable]="true"></p-column>
                                 <p-column field="Action" header="Action" [sortable]="true">
                                         <ng-template let-car="rowData" pTemplate="body">
                                                 <a href="#">
                                                         <i class="fa fa-files-o" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#">
-                                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                <a>
+                                                        <i class="fa fa-trash-o" aria-hidden="true" (click)="removeDashboard(car,dt)"></i>
                                                 </a>
                                         </ng-template>
                                 </p-column>

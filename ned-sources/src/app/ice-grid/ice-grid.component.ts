@@ -1,26 +1,38 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnChanges } from '@angular/core';
 
 
 import {GridsterItem} from './lib/index';
 import {GridsterConfigS} from './lib/gridsterConfigS.interface';
 
 import {GridsterConfig} from 'angular-gridster2'
+import { ActivatedRoute,Router } from '@angular/router';
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+
 @Component({
   selector: 'app-ice-grid',
   templateUrl: './ice-grid.component.html',
   styleUrls: ['./ice-grid.component.css']
 })
-export class IceGridComponent implements OnInit {
+export class IceGridComponent implements OnInit,OnChanges, OnDestroy {
 
   options: GridsterConfigS;
   dashboard: Array<GridsterItem>;
-
-  constructor() { }
+  id:any;
+  constructor(private route: ActivatedRoute, private router: Router) { }
 
   
 
   ngOnInit() {
+    let sub = this.route.params.subscribe(params => {
+      console.log("ID==");
+      console.log(params['id']); // (+) converts string 'id' to a number
+      this.id=params['id'];
+      // In a real app: dispatch action to load the details here.
+   });
+ 
+
     
+
     this.options = {
       gridType: 'fit',
       compactType: 'none',
@@ -28,7 +40,7 @@ export class IceGridComponent implements OnInit {
       itemResizeCallback: IceGridComponent.itemResize,
       itemInitCallback: IceGridComponent.itemInit,
       itemRemovedCallback: IceGridComponent.itemRemoved,
-      margin: 5,
+      margin: 10,
       outerMargin: true,
       mobileBreakpoint: 640,
       minCols: 1,
@@ -98,10 +110,13 @@ export class IceGridComponent implements OnInit {
     };
 
     if(localStorage.getItem('dashBoardPerference')==null){
+
+      if(this.id==1)
+      {
     this.dashboard = [
       {cols: 2, rows: 1, y: 0, x: 0 , chartId:1},
       {cols: 4, rows: 4, y: 0, x: 2, chartId:2},
-      {cols: 1, rows: 1, y: 0, x: 4},
+      {cols: 1, rows: 1, y: 0, x: 4,chartId:3},
       {cols: 1, rows: 1, y: 2, x: 5},
       {cols: undefined, rows: undefined, y: 1, x: 0},
       {cols: 1, rows: 1, y: undefined, x: undefined},
@@ -111,6 +126,18 @@ export class IceGridComponent implements OnInit {
       {cols: 1, rows: 1, y: 2, x: 4},
       {cols: 1, rows: 1, y: 2, x: 6}
     ];
+    }
+    else if(this.id==2)
+    {
+      this.dashboard=[{cols: 2, rows: 1, y: 0, x: 0 , chartId:1},
+        {cols: 4, rows: 4, y: 0, x: 2, chartId:2},
+        {cols: 1, rows: 1, y: 0, x: 4,chartId:3}]
+
+    }
+    else
+    {
+      this.router.navigate(["/**"]);
+    }
   }
   else{
     this.dashboard=JSON.parse(localStorage.getItem('dashBoardPerference'));
@@ -135,19 +162,23 @@ export class IceGridComponent implements OnInit {
 
 
   static eventStop(item, itemComponent, event) {
-    console.info('eventStop', item, itemComponent, event);
+  //  console.info('eventStop', item, itemComponent, event);
   }
 
   static itemChange(item, itemComponent) {
     console.info('itemChanged', item, itemComponent);
+    
   }
 
   static itemResize(item, itemComponent) {
     console.info('itemResized', item, itemComponent);
+    console.log(itemComponent.dashboard);
+    localStorage.removeItem("dashBoardPerference");
+    // localStorage.setItem("dashBoardPerference",JSON.stringify(dashboard));
   }
 
   static itemInit(item, itemComponent) {
-    console.info('itemInitialized', item, itemComponent);
+    // console.info('itemInitialized', item, itemComponent);
   }
 
   static itemRemoved(item, itemComponent) {
@@ -165,5 +196,17 @@ export class IceGridComponent implements OnInit {
     console.log(dashboard);
     localStorage.setItem("dashBoardPerference",JSON.stringify(dashboard));
     
+  }
+
+  ngOnChanges(){
+    console.log("----->");
+    console.log(this.dashboard);
+
+  }
+
+  ngOnDestroy(){
+    console.log("-----XX");
+    console.log(this.dashboard);
+    localStorage.setItem("dashBoardPerference",JSON.stringify(this.dashboard));
   }
 }

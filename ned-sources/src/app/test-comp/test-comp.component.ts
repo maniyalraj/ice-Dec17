@@ -32,7 +32,7 @@ export class TestCompComponent implements OnInit {
     console.log("calling dynamic Data..." + this.index);
     if (this.index == undefined)
       this.ads = this.dynamicService.getData();
-    else if(this.index==1) {
+    else if (this.index == 1) {
       console.log('API Call Start:Index==' + this.index);
       this.dynamicService.getOne(this.index).subscribe(
         result => {
@@ -45,43 +45,35 @@ export class TestCompComponent implements OnInit {
       );
 
     }
-    else if(this.index==2)
-    {
+    else if (this.index == 2) {
       console.log('Calling Charts API' + this.index);
       this.dynamicService.getChartData().subscribe(
         result => {
           this.ads = result;
           //this.ads=[new AdItem(ToPumpComponent, {name: "During API CAll", bio: 'Brave as they come'})]
           console.log('API Call Complete');
-          //let adItem = this.ads[0];
-          let adItem=new AdItem(BarChartComponent, {
-            data: {
-              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-              datasets: [
-                {
-                  label: 'My First dataset',
-                  backgroundColor: '#42A5F5',
-                  borderColor: '#1E88E5',
-                  data: [65, 59, 80, 81, 56, 55, 40]
-                },
-                {
-                  label: 'My Second dataset',
-                  backgroundColor: '#9CCC65',
-                  borderColor: '#7CB342',
-                  data: [28, 48, 40, 19, 86, 27, 90]
-                }
-              ]
-            }
-          })
-
+          let adItem = this.ads[0];
           this.resolveView(adItem);
         }
       );
     }
+
+    else if (this.index == 3) {
+      console.log('Calling Charts API' + this.index);
+      this.dynamicService.getPieChartData().subscribe(
+        result => {
+          this.ads = result;
+          //this.ads=[new AdItem(ToPumpComponent, {name: "During API CAll", bio: 'Brave as they come'})]
+          console.log('API Call Complete');
+          let adItem = this.ads[0];
+          this.resolveView(adItem);
+        }
+      );
+
+    }
   }
 
-  resolveView(adItem)
-  {
+  resolveView(adItem) {
     let componentFactory = this.componentFactoryResolver.resolveComponentFactory(adItem.component);
     let viewContainerRef = this.adHost.viewContainerRef;
     viewContainerRef.clear();

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { DynamicServiceService } from '../../../dynamic-service.service';
+import { forEach } from '@angular/router/src/utils/collection';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-manage-dashboards',
@@ -8,8 +11,9 @@ import { Component, OnInit } from '@angular/core';
 export class ManageDashboardsComponent implements OnInit {
 
   
-      cars: Array<object>;
-     constructor() { }
+    cars: Array<object>;
+    selectedDashboard:any;
+     constructor(private dynamicService: DynamicServiceService, private router: Router) { }
 
       ngOnInit() {
         var a= [{
@@ -53,6 +57,21 @@ export class ManageDashboardsComponent implements OnInit {
         
         //this.carService.getCarsSmall().then(cars => this.cars1 = cars);
         //this.carService.getCarsSmall().then(cars => this.cars2 = cars);
+
+        this.dynamicService.getDashboards().subscribe(
+          result => {
+            console.log("Manage Dashboards Data")
+            console.log(result);
+            let temp=[];
+            for(let i=0; i<result.length; i++)
+            {
+              temp.push({Name:result[i].title, Owner:result[i].username, id:result[i].id});
+            }
+            console.log(temp);
+            this.cars=temp;
+          }
+        )
+        
     }
 
     changeSort(event) {
@@ -62,4 +81,34 @@ export class ManageDashboardsComponent implements OnInit {
           //this.sortF = event.field;
         }
     }
-}
+
+    removeDashboard(data,dt)
+    {
+      console.log("Removing Dashboard...");
+      //console.log(data);
+
+      for(let i=0; i<this.cars.length; i++)
+      {
+                
+        if(data.id === this.cars[i]["id"])
+        {
+          console.log(this.cars[i]["id"]);
+          this.cars.splice(i,1);
+          console.log(this.cars);
+          console.log(dt);
+         
+        }
+      }
+
+      
+      
+    }
+
+    test(data)
+    {
+      console.log("Data CLikced");
+      console.log(data);
+      this.router.navigate(['/iceGrid', data.id]);
+    }
+    
+   }
