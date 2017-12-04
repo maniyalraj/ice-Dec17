@@ -23,10 +23,19 @@ export class CreateWidgetComponent implements OnInit {
   reg: SelectItem[];
   prod: SelectItem[];
   opera: SelectItem[];
-
+  previewClass:any="preview_small_rect";
+  small_rect:any="active";
+  small_square:any;
+  vertical_rect:any;
+  large_square:any;
+  large_vertical_rect:any;
+  
   
 
   constructor() { 
+
+    
+
     this.widgetType = [];
     this.widgetType.push({label:'Widget Type', value:null});
     this.widgetType.push({label:'chart', value:'NY'});
@@ -126,6 +135,62 @@ export class CreateWidgetComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+  
+  changeClass(className)
+  {
+    switch(className)
+    {
+      case "small_rect":
+      {
+        this.small_rect="active";
+        this.small_square="";
+        this.vertical_rect="";
+        this.large_square="";
+        this.vertical_rect="";
+        this.large_vertical_rect="";
+      }
+      break;
+      case "small_square":
+      {
+        this.small_rect="";
+        this.small_square="active";
+        this.vertical_rect="";
+        this.large_square="";
+        this.large_vertical_rect="";
+      }
+      break;
+      case "vertical_rect":
+      {
+        this.small_rect="";
+        this.small_square="";
+        this.vertical_rect="active";
+        this.large_square="";
+        this.large_vertical_rect="";
+       
+      }
+      break;
+      case "large_square":
+      {
+        this.small_rect="";
+        this.small_square="";
+        this.vertical_rect="";
+        this.large_square="active";
+        this.large_vertical_rect="";
+      }
+      break;
+      case "large_vertical_rect":
+      {
+        this.small_rect="";
+        this.small_square="";
+        this.vertical_rect="";
+        this.large_square="";
+        this.large_vertical_rect="active";
+      }
+      break;
+      
+    }
+    this.previewClass="preview_"+className;
   }
 
 }
