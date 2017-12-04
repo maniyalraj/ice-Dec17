@@ -1,0 +1,33 @@
+<div class="login-bg">
+<div class="overlay"></div>
+<div class="container">
+  <div class="row login-panel">
+    <div class="col-md-5 login-logo">
+      <img src="assets\images\Gracenote-logo.png">
+    </div>
+    <div class="col-md-7 login-form-pnl pn">
+      <div class=" pt25 pb25 pl10 pr10">
+        <form (ngSubmit)="login()" name="loginForm" #f="ngForm" novalidate>
+          <div class="cont_text_inputs" data-tip="Your Username is your Gracenote Username e.g. shegde">
+            <input type="text" class="input_form_sign d_block active_inp" placeholder="User Name" name="username" id="username" [(ngModel)]="user.username" #username="ngModel" autofocus="autofocus"/>
+          </div>
+          <div class="cont_text_inputs" data-tip="Your Password is your Gracenote Domain Password">
+            <input [type]="togglePasswordFlag ? 'text' : 'password'" class="input_form_sign d_block active_inp" placeholder="Password" name="password" id="password" [(ngModel)]="user.password" #password="ngModel"/>
+            <i class="fa fa-eye" aria-hidden="true" (click)="displayPasswordFunction()"></i> 
+            <div class="checkbox-custom fill checkbox-success">
+                <input type="checkbox" checked="" id="checkboxExample5">
+                <label for="checkboxExample5">Remember me</label>
+          </div>
+          </div>
+          <div class="clearfix"></div>
+          <input type="submit" class="login-btn fr pt10 pb10 pl50 pr50 txt-white" value="Login">
+          <div class="clearfix"></div>
+          <label class="error-msg" for="username" id="errorMessageContainer"></label>
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=helpdesk@gracenote.com&su=Please reset my Gracenote password." target="_blank"><span class="forgot-pass mt10">Forgot password</span></a>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+</div>

@@ -1,0 +1,26 @@
+
+@font-face {
+  font-family: 'ArchivoNarrow-Regular';
+  src: url('../fonts/ArchivoNarrow-Regular/ArchivoNarrow-Regular.eot?#iefix') format('embedded-opentype'),  url('../fonts/ArchivoNarrow-Regular/ArchivoNarrow-Regular.woff') format('woff'), url('../fonts/ArchivoNarrow-Regular/ArchivoNarrow-Regular.ttf')  format('truetype'), url('../fonts/ArchivoNarrow-Regular/ArchivoNarrow-Regular.svg#ArchivoNarrow-Regular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'OpenSans';
+  src: url('../fonts/OpenSans/OpenSans.eot?#iefix') format('embedded-opentype'),  url('../fonts/OpenSans/OpenSans.woff') format('woff'), url('../fonts/OpenSans/OpenSans.ttf')  format('truetype'), url('../fonts/OpenSans/OpenSans.svg#OpenSans') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'RobotoRegular';
+  src: url('../fonts/Roboto-Regular/roboto-regular.eot');
+  src: url('../fonts/Roboto-Regular/roboto-regular.eot') format('embedded-opentype'),
+       url('../fonts/Roboto-Regular/roboto-regular.woff2') format('woff2'),
+       url('../fonts/Roboto-Regular/roboto-regular.woff') format('woff'),
+       url('../fonts/Roboto-Regular/roboto-regular.ttf') format('truetype'),
+       url('../fonts/Roboto-Regular/roboto-regular.svg#RobotoRegular') format('svg');
+}

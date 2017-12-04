@@ -1,0 +1,13 @@
+input::-ms-clear, input::-ms-reveal {
+    display: none;
+}
+
+.error-msg {
+    position: absolute;
+    left: 25px;
+    top: 67%;
+    font-size: 10px;
+    color: #dd0014;
+    width: 42%;
+    font-size: 11px;
+}

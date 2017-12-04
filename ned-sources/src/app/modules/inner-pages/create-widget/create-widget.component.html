@@ -1,0 +1,134 @@
+<div class="wrapper">
+<div class="row">
+    <div class="create-widget col-md-2  p20 ">
+
+        <form>
+            <div class="form-group">
+                <button type="button" label="Click"  >
+                    <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                    <span>Create Widget</span>
+                    
+                </button>
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Range</label>
+                <p-calendar [showIcon]="true" selectionMode="range" readonlyInput="true"></p-calendar>
+            </div>
+            <div class="form-group">
+                <label>Widget Type </label>
+                <p-dropdown [options]="widgetType" placeholder="Widget Type" optionLabel="name"></p-dropdown>
+            </div>
+            <div class="form-group">
+                <label>Group By</label>
+                <p-dropdown [options]="groupby" placeholder="Group by" optionLabel="name"></p-dropdown>
+            </div>
+            <div class="form-group">
+                <div class="ui-g-6">
+                    <p-radioButton name="group1" value="Cost Data" label="Cost Data" inputId="opt1"></p-radioButton>
+                </div>
+                <div class="ui-g-6">
+                    <p-radioButton name="group1" value="Usage Data" label="Usage Data" inputId="opt2"></p-radioButton>
+                </div>
+            </div>
+            <div class="form-group">
+                <p-dropdown [options]="limit" placeholder="Select limit" optionLabel="name" class="limit"></p-dropdown>
+                <p-spinner size="30"></p-spinner>
+            </div>
+            <div class="form-group">
+                <p-dropdown [options]="Agreegate" placeholder="Agreegate" optionLabel="name"></p-dropdown>
+            </div>
+            <div class="form-group">
+
+                <a (click)="op.toggle($event)">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>Add Filter</a>
+
+
+            </div>
+            <button class="btn">Cancel</button>
+            <button class="btn active">Save</button>
+        </form>
+    </div>
+
+    <div class="preview_widget_panel col-md-10 ">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 col-centered">
+                <div class="preview_widget">
+                    <div class="title">
+                        <h2>Reservation</h2>
+                        <span>1/12/2017 -14/12/2017</span>
+                    </div>
+                    <div class="content">
+                        <button>Preview</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-md-offset-3 col-centered">
+                    <div class="preview_widget">
+                        <div class="title">
+                            <h2>Reservation</h2>
+                            <span>1/12/2017 -14/12/2017</span>
+                        </div>
+                        <div class="content">
+                            <table class="table"> 
+                                <tr>
+                                    <th>Operation</th>
+                                    <th>Cost(Total)</th>
+                                </tr>
+                                <tr>
+                                    <td>Savings-Spot</td>
+                                    <td>$ 553,148.68</td>
+                                </tr>
+                                <tr>
+                                    <td>Spot Instances</td>
+                                    <td>$ 214,043.72</td>
+                                </tr>
+                                <tr>
+                                    <td>On Demand Instances</td>
+                                    <td>$ 487,250.27</td>
+                                </tr>
+                                <tr>
+                                    <td>Savings-partial Upfront</td>
+                                    <td>$ 51,420.56</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+              
+        </div>
+       
+         
+       
+    </div>
+</div>
+<p-overlayPanel #op>
+    <form>
+        <div class="form-group">
+            <label>Account </label>
+            <p-multiSelect [options]="acc"></p-multiSelect>
+        </div>
+        <div class="form-group">
+            <label>Region </label>
+            <p-multiSelect [options]="reg"></p-multiSelect>
+        </div>
+        <div class="form-group">
+            <label>Product </label>
+            <p-multiSelect [options]="prod"></p-multiSelect>
+        </div>
+        <div class="form-group">
+            <label>Operation </label>
+            <p-multiSelect [options]="opera"></p-multiSelect>
+        </div>
+        <div class="form-group">
+            <label>Usage Type </label>
+            <p-multiSelect [options]="cars"></p-multiSelect>
+        </div>
+    </form>
+</p-overlayPanel>
+
+</div>
+

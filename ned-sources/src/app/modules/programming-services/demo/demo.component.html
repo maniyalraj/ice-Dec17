@@ -1,0 +1,58 @@
+<div class="content-wrapper" id="content-wrapper">
+    <section class="content-header">
+      <h1 class="title pl30">Search: Programming Services</h1>
+    </section>
+    <section class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="box">
+          <div class="box-header">
+            <h4 class="box-title fs18 txt-violet">Search Results = </h4>
+            <div class="box-tools pull-right"> <a href="#" id="panel-fullscreen" role="button" title="Toggle fullscreen"><i class="fa fa-expand"></i></a> </div>
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+              <div class="row mb25">
+                  <div class="col-md-12">
+                    <!--table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+                    </table-->
+                    <ng-template #content let-c="close" let-d="dismiss">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Modal title</h4>
+                          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>One fine body&hellip;</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+                        </div>
+                      </ng-template>
+                      
+                      <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Launch demo modal</button>
+                      
+                      <hr>
+                      
+                      <pre>{{closeResult}}</pre>
+                    <form name="primengComponentForm" (ngSubmit)="validateQuickSearchForm()" #primengComponentForm="ngForm" novalidate>
+                        <p-dropdown [options]="cities" [(ngModel)]="selectedCity" name="selectedCity" [filter]="true"></p-dropdown>
+                        <p-multiSelect [options]="cities" [(ngModel)]="multiselectedCities" name="multiselectedCities"></p-multiSelect>
+                      
+                      
+                        <input type="submit">
+                      </form>
+
+                  </div>
+                </div>
+          </div>
+          <!-- /.box-body --> 
+        </div>
+        <!-- /.box --> 
+      </div>
+      </div>
+    
+      </section>
+    </div>
+    <!-- /.content-wrapper -->
