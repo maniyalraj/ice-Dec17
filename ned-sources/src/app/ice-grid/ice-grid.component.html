@@ -1,14 +1,87 @@
 <!-- <app-test-comp></app-test-comp> -->
+
+ 
 <button (click)="savePreference(dashboard)">Save View</button>
-<mat-sidenav-container>
-  <gridster [options]="options">
-    <gridster-item [item]="item" *ngFor="let item of dashboard">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
+
+<mat-sidenav-container class="ice-grid-wrapper">
+    <div class="row">
+      
+        <div class="heading ">
+            <div class="col-md-10"> <input type="text" value="Dashboard"></div>
+          <div class="col-md-2">
+            <div class="create-icon  pull-right" pTooltip="Add Widget" tooltipPosition="left">
+                     <i class="fa fa-plus-circle" aria-hidden="true"></i>
+             </div>
+             </div>
+     </div>
+       
+      </div>
+      <div class="row">  <div class="dashboard_action_wrapper">
+          <ul class="dashboard_action">
+            <li>
+              <a href="#">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>Share</a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa fa-comment" aria-hidden="true"></i>Annotate </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa fa-files-o" aria-hidden="true"></i>Duplicate</a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>Delete</a>
+            </li>
+          </ul>
+        </div>
+        
+          <!-- <gridster [options]="options">
+          <gridster-item [item]="item" *ngFor="let item of dashboard">
+          </gridster-item>
+        </gridster> -->
+      
+        </div>
+      
+  <gridster [options]="options" class="gridster">
+    
+        
+    <gridster-item [item]="item" *ngFor="let item of dashboard" class="grid-panel">
+      <div class="grid-header">
+        <div class="widget-title">
+          <h2>Database Chart</h2>
+          <span class="dates">Last 90 days</span>
+        </div>
+        <ul>
+          <li>
+            <a href="#">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="fa fa-files-o" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="fa fa-cloud-download" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+
       <div class="button-holder">
-          <div class="gridster-item-content" *ngIf="item.chartId" style="width:100%;height:100%">
-              
-              <app-test-comp [index]="item.chartId" style="width:100%;height:100%" ></app-test-comp>
-          </div>
+        <div class="gridster-item-content" *ngIf="item.chartId" style="width:100%;height:100%">
+
+          <app-test-comp [index]="item.chartId" class="content"></app-test-comp>
+        </div>
         <!-- <div class="gridster-item-content" *ngIf="item.hasContent">
           <div class="stuff">
             <span>Some content to select and click without dragging the widget</span>
