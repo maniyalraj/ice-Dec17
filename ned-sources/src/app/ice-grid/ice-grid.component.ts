@@ -84,14 +84,14 @@ export class IceGridComponent implements OnInit,OnChanges, OnDestroy {
         enabled: true,
         stop: IceGridComponent.eventStop,
         handles: {
-          s: true,
-          e: true,
-          n: true,
-          w: true,
+          s: false,
+          e: false,
+          n: false,
+          w: false,
           se: true,
-          ne: true,
-          sw: true,
-          nw: true
+          ne: false,
+          sw: false,
+          nw: false
         }
       },
       api: {
@@ -116,7 +116,7 @@ export class IceGridComponent implements OnInit,OnChanges, OnDestroy {
     this.dashboard = [
       {cols: 2, rows: 1, y: 0, x: 0 , chartId:1},
       {cols: 4, rows: 4, y: 0, x: 2, chartId:2},
-      {cols: 2, rows: 2, y: 2, x: 0, chartId:2}
+      {cols: 2, rows: 2, y: 2, x: 0, chartId:3}
     ];
     }
     else if(this.id==2)

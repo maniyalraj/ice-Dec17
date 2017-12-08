@@ -7,6 +7,7 @@ import { FirstComponentComponent } from './first-component/first-component.compo
 import { ToPumpComponent } from './to-pump/to-pump.component';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
+import { environment } from '../environments/environment.prod';
 @Injectable()
 export class DynamicServiceService {
 
@@ -100,6 +101,16 @@ export class DynamicServiceService {
     }
     )
   }
+
+  
+
+    // getApi(url): Response{
+      
+    //   return this.http.get(this.url).map((response)=>{
+    //     return response;
+    //   })
+    // }
+  
 
 
 }

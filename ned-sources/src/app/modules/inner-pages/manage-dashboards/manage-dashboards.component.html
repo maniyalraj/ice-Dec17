@@ -1,4 +1,8 @@
 <div class="wrapper">
+                <!-- <button type="text" (click)="display = true" pButton icon="fa-external-link-square" label="Show"></button> -->
+                <p-sidebar [(visible)]="display">
+                    <button>Click</button>
+                </p-sidebar>
         <div class="row">
                 <div class="manage-dashboard col-md-12 pn">
                         <div class="heading ">
@@ -6,7 +10,7 @@
                                         <h2>Manage Dashboards</h2>
                                 </div>
                                 <div class="col-md-2">
-                                        <div class="create-icon  pull-right" pTooltip="New Dashboard" tooltipPosition="left">
+                                        <div class="create-icon  pull-right" pTooltip="New Dashboard" tooltipPosition="left"  (click)="display = true">
                                                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                                         </div>
                                 </div>

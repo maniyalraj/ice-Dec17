@@ -108,7 +108,7 @@ export class ManageDashboardsComponent implements OnInit {
     {
       console.log("Data CLikced");
       console.log(data);
-      this.router.navigate(['/iceGrid', data.id]);
+      this.router.navigate(['/dashboard', data.id]);
     }
     
    }

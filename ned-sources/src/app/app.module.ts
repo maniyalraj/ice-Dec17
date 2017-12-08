@@ -50,6 +50,9 @@ import { ManageDashboardsComponent } from './modules/inner-pages/manage-dashboar
 import { DemoComponent } from './modules/programming-services/demo/demo.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
 
+import {SidebarModule} from './modules/inner-pages/create-widget/sidebar';
+import { DropDownService } from './services/drop-down.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -93,7 +96,8 @@ import { PieChartComponent } from './pie-chart/pie-chart.component';
     MultiSelectModule,
     DataTableModule,
     SharedModule,
-    TooltipModule
+    TooltipModule,
+    SidebarModule
 
     // DynamicModule.withComponents([ViewHolderComponent])
   ],
@@ -104,7 +108,8 @@ import { PieChartComponent } from './pie-chart/pie-chart.component';
     },
     ProgServService,
     LookupService,
-    DynamicServiceService
+    DynamicServiceService,
+    DropDownService
   ],
   entryComponents:[FirstComponentComponent,ToPumpComponent,ViewHolderComponent,BarChartComponent,PieChartComponent],
   bootstrap: [AppComponent]

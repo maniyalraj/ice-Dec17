@@ -1,203 +1,416 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ComponentFactoryResolver } from '@angular/core';
 import { SelectItem } from 'primeng/primeng';
- 
+import { DynamicServiceService } from '../../../dynamic-service.service';
+import { Sidebar } from './sidebar';
+import { DropDownService } from '../../../services/drop-down.service';
+import { DynamicDirective } from '../../../directives/dynamic.directive';
+
+import { AdComponent } from '../../../ad.component';
+import { AdItem } from '../../../aditem';
+import { BarChartComponent } from '../../../bar-chart/bar-chart.component';
+
+
 
 @Component({
   selector: 'app-create-widget',
   templateUrl: './create-widget.component.html',
   styleUrls: ['./create-widget.component.css'],
-  encapsulation : ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None
 })
 export class CreateWidgetComponent implements OnInit {
+
+
+  @ViewChild(DynamicDirective) adHost: DynamicDirective;
+
   widgetType: SelectItem[];
-  groupby:SelectItem[];
-  limit:SelectItem[];
-  Agreegate:SelectItem[];
-  account:SelectItem[];
-  region:SelectItem[];
-  product:SelectItem[];
-  operation:SelectItem[];
-  usageType:SelectItem[];
+  groupby: SelectItem[];
+  limit: SelectItem[];
+  Agreegate: SelectItem[];
+  account: SelectItem[];
+  region: SelectItem[];
+  product: SelectItem[];
+  operation: SelectItem[];
+  usageType: SelectItem[];
   cars: SelectItem[];
   acc: SelectItem[];
   reg: SelectItem[];
   prod: SelectItem[];
   opera: SelectItem[];
-  previewClass:any="preview_small_rect";
-  small_rect:any="active";
-  small_square:any;
-  vertical_rect:any;
-  large_square:any;
-  large_vertical_rect:any;
-  
-  
+  resourceGroup: SelectItem[];
+  previewClass: any = "preview_small_rect";
+  small_rect: any = "active";
+  small_square: any;
+  vertical_rect: any;
+  large_square: any;
+  large_vertical_rect: any;
+  selectedAccounts: any[];
+  selectedRegions: any[];
+  selectedProducts: any[];
+  selectedOperations: any[];
+  selectedUsageType: any[];
+  selectedResourceGroup: any[];
+  selectedwidgetType: any;
+  selectedGroupBy: any;
+  selectedLimit: any;
+  selectedAgreegate: any;
+  isCost: boolean;
+  selectedRange: any;
+  previewOptions: any;
+  previewData: any;
 
-  constructor() { 
 
-    
+
+
+  constructor(private dropDownService: DropDownService, private componentFactoryResolver: ComponentFactoryResolver) {
 
     this.widgetType = [];
-    this.widgetType.push({label:'Widget Type', value:null});
-    this.widgetType.push({label:'chart', value:'NY'});
-    this.widgetType.push({label:'pie', value:'RM'});
-    this.widgetType.push({label:'table', value:'LDN'});
-    this.widgetType.push({label:'Istanbul', value:'IST'});
-    this.widgetType.push({label:'Paris', value:'PRS'});
+    this.widgetType.push({ label: 'Widget Type', value: null });
+    this.widgetType.push({ label: 'Chart', value: 'Chart' });
+    this.widgetType.push({ label: 'Pie', value: 'Pie' });
+    this.widgetType.push({ label: 'Table', value: 'Table' });
 
     // For Group By
-    this.groupby=[];
-    this.groupby.push({label:'Operation', value:'NY'});
-    this.groupby.push({label:'Account', value:'NY'});
-    this.groupby.push({label:'Region', value:'NY'});
-    this.groupby.push({label:'Product', value:'NY'});
-    this.groupby.push({label:'Usage Type', value:'NY'});
-
+    this.groupby = [];
+    this.groupby.push({ label: 'Operation', value: 'Operation' });
+    this.groupby.push({ label: 'Account', value: 'Account' });
+    this.groupby.push({ label: 'Region', value: 'Region' });
+    this.groupby.push({ label: 'Product', value: 'Product' });
+    this.groupby.push({ label: 'Usage Type', value: 'UsageType' });
 
     // For limit
-    this.limit=[];
-    this.limit.push({label:'5', value:'NY'});
+    this.limit = [];
+    this.limit.push({ label: 'Top', value: 'Top' });
+    this.limit.push({ label: 'Bottom', value: 'Bottom' });
 
-     // For agreegate
-     this.Agreegate=[];
-     this.Agreegate.push({label:'Hourly', value:'NY'});
-     this.Agreegate.push({label:'Daily', value:'NY'});
-     this.Agreegate.push({label:'Weekly', value:'NY'});
-     this.Agreegate.push({label:'Monthly', value:'NY'});
+    // For agreegate
+    this.Agreegate = [];
+    this.Agreegate.push({ label: 'Hourly', value: 'hourly' });
+    this.Agreegate.push({ label: 'Daily', value: 'daily' });
+    this.Agreegate.push({ label: 'Weekly', value: 'weekly' });
+    this.Agreegate.push({ label: 'Monthly', value: 'monthly' });
 
-     // For account
-     this.acc = [
-      {label: 'c1.medium', value: 'c1.medium'},
-      {label: 'c3.2xlarge', value: 'c3.2xlarge'},
-      {label: 'c3.4xlarge  ', value: 'c3.4xlarge  '},
-      {label: 'c3.4xlarge.windows', value: 'c3.4xlarge.windows'},
-      {label: 'c1.medium', value: 'c1.medium1'},
-      {label: 'c3.2xlarge', value: 'c3.2xlarge1'},
-      {label: 'c3.4xlarge  ', value: 'c3.4xlarge1  '},
-      {label: 'c3.4xlarge.windows', value: 'c3.4xlarge.windows1'},
-       
-  ];
-     // For region
-     this.reg = [
-      {label: 'c1.medium', value: 'c1.medium'},
-      {label: 'c3.2xlarge', value: 'c3.2xlarge'},
-      {label: 'c3.4xlarge  ', value: 'c3.4xlarge  '},
-      {label: 'c3.4xlarge.windows', value: 'c3.4xlarge.windows'},
-      {label: 'c1.medium', value: 'c1.medium1'},
-      {label: 'c3.2xlarge', value: 'c3.2xlarge1'},
-      {label: 'c3.4xlarge  ', value: 'c3.4xlarge1  '},
-      {label: 'c3.4xlarge.windows', value: 'c3.4xlarge.windows1'},
-       
-  ];
-      
-      // For product
-      this.prod = [
-        {label: 'c1.medium', value: 'c1.medium'},
-        {label: 'c3.2xlarge', value: 'c3.2xlarge'},
-        {label: 'c3.4xlarge  ', value: 'c3.4xlarge  '},
-        {label: 'c3.4xlarge.windows', value: 'c3.4xlarge.windows'},
-        {label: 'c1.medium', value: 'c1.medium1'},
-        {label: 'c3.2xlarge', value: 'c3.2xlarge1'},
-        {label: 'c3.4xlarge  ', value: 'c3.4xlarge1  '},
-        {label: 'c3.4xlarge.windows', value: 'c3.4xlarge.windows1'},
-         
-    ];
-     
-     // For operation
-     this.opera = [
-      {label: 'c1.medium', value: 'c1.medium'},
-      {label: 'c3.2xlarge', value: 'c3.2xlarge'},
-      {label: 'c3.4xlarge  ', value: 'c3.4xlarge  '},
-      {label: 'c3.4xlarge.windows', value: 'c3.4xlarge.windows'},
-      {label: 'c1.medium', value: 'c1.medium1'},
-      {label: 'c3.2xlarge', value: 'c3.2xlarge1'},
-      {label: 'c3.4xlarge  ', value: 'c3.4xlarge1  '},
-      {label: 'c3.4xlarge.windows', value: 'c3.4xlarge.windows1'},
-       
-  ];
-    
-      // For account
-     
+    //For Account Data
+    this.dropDownService.getAccounts().subscribe((result) => {
+      this.acc = this.formatDropDownJson(result.data);
+      this.onAccountChange();
+    });
 
-    this.cars = [
-      {label: 'c1.medium', value: 'c1.medium'},
-      {label: 'c3.2xlarge', value: 'c3.2xlarge'},
-      {label: 'c3.4xlarge  ', value: 'c3.4xlarge  '},
-      {label: 'c3.4xlarge.windows', value: 'c3.4xlarge.windows'},
-      {label: 'c1.medium', value: 'c1.medium1'},
-      {label: 'c3.2xlarge', value: 'c3.2xlarge1'},
-      {label: 'c3.4xlarge  ', value: 'c3.4xlarge1  '},
-      {label: 'c3.4xlarge.windows', value: 'c3.4xlarge.windows1'},
-       
-  ];
-    
-  
-     
+
+  }
+
+  formatDropDownJson(inputData): any {
+    let temp = []
+    for (let i = 0; i < inputData.length; i++) {
+      temp.push({ "label": inputData[i].name, "value": inputData[i].name });
+    }
+    return temp;
   }
 
   ngOnInit() {
   }
-  
-  changeClass(className)
-  {
-    switch(className)
-    {
+
+  changeClass(className) {
+    this.preview();
+    switch (className) {
       case "small_rect":
-      {
-        this.small_rect="active";
-        this.small_square="";
-        this.vertical_rect="";
-        this.large_square="";
-        this.vertical_rect="";
-        this.large_vertical_rect="";
-      }
-      break;
+        {
+          this.small_rect = "active";
+          this.small_square = "";
+          this.vertical_rect = "";
+          this.large_square = "";
+          this.vertical_rect = "";
+          this.large_vertical_rect = "";
+        }
+        break;
       case "small_square":
-      {
-        this.small_rect="";
-        this.small_square="active";
-        this.vertical_rect="";
-        this.large_square="";
-        this.large_vertical_rect="";
-      }
-      break;
+        {
+          this.small_rect = "";
+          this.small_square = "active";
+          this.vertical_rect = "";
+          this.large_square = "";
+          this.large_vertical_rect = "";
+        }
+        break;
       case "vertical_rect":
-      {
-        this.small_rect="";
-        this.small_square="";
-        this.vertical_rect="active";
-        this.large_square="";
-        this.large_vertical_rect="";
-       
-      }
-      break;
+        {
+          this.small_rect = "";
+          this.small_square = "";
+          this.vertical_rect = "active";
+          this.large_square = "";
+          this.large_vertical_rect = "";
+
+        }
+        break;
       case "large_square":
-      {
-        this.small_rect="";
-        this.small_square="";
-        this.vertical_rect="";
-        this.large_square="active";
-        this.large_vertical_rect="";
-      }
-      break;
+        {
+          this.small_rect = "";
+          this.small_square = "";
+          this.vertical_rect = "";
+          this.large_square = "active";
+          this.large_vertical_rect = "";
+        }
+        break;
       case "large_vertical_rect":
-      {
-        this.small_rect="";
-        this.small_square="";
-        this.vertical_rect="";
-        this.large_square="";
-        this.large_vertical_rect="active";
-      }
-      break;
-      
+        {
+          this.small_rect = "";
+          this.small_square = "";
+          this.vertical_rect = "";
+          this.large_square = "";
+          this.large_vertical_rect = "active";
+        }
+        break;
+
     }
-    this.previewClass="preview_"+className;
+    this.previewClass = "preview_" + className;
+  }
+
+  onAccountChange() {
+    console.log("getting regions");
+    this.dropDownService.getRegions(this.selectedAccounts).subscribe((result) => {
+      this.reg = this.formatDropDownJson(result.data);
+      this.selectedRegions = this.getIntersection(this.selectedRegions, this.reg);
+      this.onRegionsChange();
+    })
+  }
+
+  onRegionsChange() {
+    this.dropDownService.getProducts(this.selectedAccounts, this.selectedRegions).subscribe((result) => {
+      this.prod = this.formatDropDownJson(result.data);
+      this.selectedProducts = this.getIntersection(this.selectedProducts, this.prod);
+      this.onProductsChange();
+    })
+  }
+
+  onProductsChange() {
+    this.dropDownService.getResourceChange(this.selectedAccounts, this.selectedRegions, this.selectedProducts).subscribe((result) => {
+      this.resourceGroup = this.formatDropDownJson(result.data);
+      this.selectedResourceGroup = this.getIntersection(this.selectedResourceGroup, this.resourceGroup);
+      this.onResourceChange();
+    })
+  }
+
+
+  onResourceChange() {
+
+    this.dropDownService.getOperations(this.selectedAccounts, this.selectedRegions, this.selectedProducts, this.selectedResourceGroup).subscribe((result) => {
+      this.opera = this.formatDropDownJson(result.data);
+      this.selectedOperations = this.getIntersection(this.selectedOperations, this.opera);
+      this.onOperationsChange();
+    })
+
+  }
+
+  onOperationsChange() {
+    this.dropDownService.getUsageTypes(this.selectedAccounts, this.selectedRegions, this.selectedProducts, this.selectedOperations).subscribe((result) => {
+      this.usageType = this.formatDropDownJson(result.data);
+      this.selectedUsageType = this.getIntersection(this.selectedUsageType, this.usageType);
+    })
+  }
+
+
+  getData() {
+
+    //Temporary Function
+    // this.selectAll();
+
+
+    this.previewOptions = {
+      account: this.processInput(this.selectedAccounts),
+      aggregate: "stats",
+      breakdown: false,
+      consolidate: this.selectedAgreegate,
+      end: this.formatDate(this.selectedRange[1]),
+      factorsps: false,
+      family: false,
+      groupBy: this.selectedGroupBy,
+      isCost: this.isCost,
+      operation: this.processInput(this.selectedOperations),
+      region: this.processInput(this.selectedRegions),
+      showsps: false,
+      start: this.formatDate(this.selectedRange[0]),
+      usageType: this.processInput(this.selectedUsageType),
+      usageUnit: "",
+      widgetType: this.selectedwidgetType,
+      limit: this.selectedLimit,
+      reg: this.processInput(this.selectedRegions),
+      prod: this.processInput(this.selectedProducts),
+
+      selectedRange: this.processInput(this.selectedRange)
+
+    };
+
+    this.previewOptions = this.processJson(this.previewOptions);
+    console.log(this.previewOptions);
+
+    this.dropDownService.getData(this.previewOptions).subscribe((result) => {
+      console.log("Get Data...");
+      console.log(result);
+      this.previewData = result;
+    })
+  }
+
+  processJson(input): any {
+
+    for (let key in input) {
+      if (input[key] === "")
+        delete input[key];
+    }
+
+    return input;
+  }
+  processInput(input): String {
+    try {
+      let temp = "";
+      if (input != undefined) {
+        for (let i = 0; i < input.length; i++) {
+          if (i == 0)
+            temp = temp + input[i];
+          else
+            temp = temp + "," + input[i];
+        }
+      }
+      return temp;
+    }
+    catch (error) {
+      console.error(error);
+      return "";
+
+    }
+  }
+  formatDate(date) {
+    let temp = "";
+
+    temp = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " 05AM";
+
+    return temp;
+
+  }
+
+  getIntersection(selectedValues, availableValues): any {
+    if (selectedValues != undefined) {
+      for (let i = 0; i < selectedValues.length; i++) {
+        let flag = false;
+        for (let j = 0; j < availableValues.length; j++) {
+          if (selectedValues[i] == availableValues[j].value) {
+            flag = true;
+            break;
+          }
+        }
+        if (!flag) {
+          selectedValues.splice(i, 1);
+        }
+      }
+    }
+    return selectedValues;
+  }
+
+
+  preview() {
+    let data = this.processData(this.previewData);
+    // let data = this.processData({     
+
+    //       "a":[65, 59, 80, 81, 56, 55, 40],
+    //       "b": [28, 48, 40, 19, 86, 27, 90]
+
+    //   }
+    //   );
+
+    let adItem = new AdItem(BarChartComponent, data);
+    this.resolveView(adItem);
+  }
+
+  // selectAll()
+  // {
+  //   this.selectedAccounts=this.acc;
+  //   this.selectedRegions=this.reg;
+  //   this.selectedProducts=this.prod;
+  //   this.selectedOperations=this.opera;
+  //   this.selectedUsageType=this.usageType;
+  // }
+
+  resolveView(adItem) {
+    let componentFactory = this.componentFactoryResolver.resolveComponentFactory(adItem.component);
+    let viewContainerRef = this.adHost.viewContainerRef;
+    viewContainerRef.clear();
+
+    let componentRef = viewContainerRef.createComponent(componentFactory);
+    (<AdComponent>componentRef.instance).data = adItem.data;
+  }
+
+  processData(input) {
+    let labels = [];
+    let data = { labels: [], datasets: [] };
+    let labelSize = 0;
+    console.log(input);
+
+    for (let key in input.data) {
+      console.log(key);
+      // labels.push(key);
+      labelSize = input.data[key].length;
+      data.datasets.push({ label: key, data: input.data[key], backgroundColor: this.randomHexColor(), borderColor: "#FFF" });
+    }
+
+    let start = new Date(input.start);
+    let interval = input.interval;
+    for (let i = 0; i < labelSize; i++) {
+      labels.push(start);
+      start = new Date(start.getTime() + interval);
+    }
+
+    data.labels = labels;
+    console.log(data);
+    //this.data = data;
+
+    let unit = "";
+    if (input.interval === 3600000) {
+      unit = "hour";
+    }
+    else {
+      unit = "day";
+    }
+
+    let options = {
+      responsive: true,
+      maintainAspectRatio: true,
+      legend: {
+        display: false,
+        position: 'bottom',
+        labels: {
+          fontColor: "#000080",
+        }
+      },
+      scales: {
+        xAxes: [{
+          type: 'time',
+          distribution: 'series',
+          stacked: true,
+          ticks: {
+            source: 'auto',
+            autoSkip: true
+          },
+          time: {
+            unit: unit,
+            unitStepSize: "0.5"
+          },
+          bounds: 'ticks'
+        }]
+      }
+    }
+
+    return { data, options };
+
+
+  }
+
+  randomHexColor(): String {
+
+    return "#000000".replace(/0/g, function () { return (~~(Math.random() * 16)).toString(16); });;
   }
 
 }
 export class ModelComponent {
-  
-      selectedValue: string;
-  
-  }
-  
- 
+
+  selectedValue: string;
+
+}
+

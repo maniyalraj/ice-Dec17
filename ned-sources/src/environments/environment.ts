@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  serverIpAddress: '10.3.39.11:8787'
+  // serverIpAddress: '10.3.39.11:8787'
+  serverIpAddress:'http://woi-lt-259:9090/ice'
 };

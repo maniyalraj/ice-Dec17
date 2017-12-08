@@ -3,3 +3,8 @@
     color:blue;   
     
 }
+
+.create-icon:hover
+{
+cursor: pointer;
+}
