@@ -34,7 +34,7 @@ export class IceGridComponent implements OnInit,OnChanges, OnDestroy {
     
 
     this.options = {
-      gridType: 'fit',
+      gridType: 'fixed',//fit
       compactType: 'none',
       itemChangeCallback: IceGridComponent.itemChange,
       itemResizeCallback: IceGridComponent.itemResize,
@@ -55,8 +55,8 @@ export class IceGridComponent implements OnInit,OnChanges, OnDestroy {
       minItemArea: 1,
       defaultItemCols: 1,
       defaultItemRows: 1,
-      fixedColWidth: 105,
-      fixedRowHeight: 105,
+      fixedColWidth: 200,
+      fixedRowHeight: 200,
       keepFixedHeightInMobile: false,
       keepFixedWidthInMobile: false,
       scrollSensitivity: 10,
@@ -113,11 +113,24 @@ export class IceGridComponent implements OnInit,OnChanges, OnDestroy {
 
       if(this.id==1)
       {
-    this.dashboard = [
-      {cols: 2, rows: 1, y: 0, x: 0 , chartId:1},
-      {cols: 4, rows: 4, y: 0, x: 2, chartId:2},
-      {cols: 2, rows: 2, y: 2, x: 0, chartId:3}
-    ];
+    // this.dashboard = [
+    //   {cols: 2, rows: 1, y: 0, x: 0 , chartId:1},
+    //   {cols: 4, rows: 4, y: 0, x: 2, chartId:2},
+    //   {cols: 2, rows: 2, y: 2, x: 0, chartId:3}
+    // ];
+
+    let dashboards= JSON.parse(localStorage.getItem("Widgets"));
+     this.dashboard=[];
+
+    for (let i=0; i<dashboards.length; i++)
+    {
+      this.dashboard.push({
+        cols:dashboards[i].size.cols,
+        rows:dashboards[i].size.rows,
+        chartId: dashboards[i].id
+      });
+    }
+
     }
     else if(this.id==2)
     {

@@ -8,6 +8,7 @@ import { DynamicDirective } from '../../../directives/dynamic.directive';
 import { AdComponent } from '../../../ad.component';
 import { AdItem } from '../../../aditem';
 import { BarChartComponent } from '../../../bar-chart/bar-chart.component';
+import { PieChartComponent } from '../../../pie-chart/pie-chart.component';
 
 
 
@@ -57,6 +58,7 @@ export class CreateWidgetComponent implements OnInit {
   selectedRange: any;
   previewOptions: any;
   previewData: any;
+  isPreview: boolean = true;
 
 
 
@@ -65,9 +67,9 @@ export class CreateWidgetComponent implements OnInit {
 
     this.widgetType = [];
     this.widgetType.push({ label: 'Widget Type', value: null });
-    this.widgetType.push({ label: 'Chart', value: 'Chart' });
-    this.widgetType.push({ label: 'Pie', value: 'Pie' });
-    this.widgetType.push({ label: 'Table', value: 'Table' });
+    this.widgetType.push({ label: 'Bar', value: 'bar' });
+    this.widgetType.push({ label: 'Pie', value: 'pie' });
+    this.widgetType.push({ label: 'Table', value: 'table' });
 
     // For Group By
     this.groupby = [];
@@ -110,7 +112,13 @@ export class CreateWidgetComponent implements OnInit {
   }
 
   changeClass(className) {
+    
+    try{
     this.preview();
+    }
+    catch(error){
+
+    }
     switch (className) {
       case "small_rect":
         {
@@ -123,6 +131,8 @@ export class CreateWidgetComponent implements OnInit {
         }
         break;
       case "small_square":
+
+
         {
           this.small_rect = "";
           this.small_square = "active";
@@ -246,7 +256,64 @@ export class CreateWidgetComponent implements OnInit {
       console.log("Get Data...");
       console.log(result);
       this.previewData = result;
+      this.preview();
+      this.saveData();
     })
+  }
+
+  saveData()
+  {
+    let widgets=[];
+    let widget={};
+    widget["id"]=1;
+    widget["options"]=this.previewOptions;
+    widget["size"]=this.getWidgetSize();
+    widgets.push(widget);
+
+    if(localStorage.getItem("Widgets")==null)
+    {
+    localStorage.setItem("Widgets",JSON.stringify(widgets));
+    }
+    else
+    {
+      let widgets=JSON.parse(localStorage.getItem("Widgets"));
+      widgets.push(widget)
+      localStorage.setItem("Widgets",JSON.stringify(widgets));
+    }
+  
+  }
+
+  getWidgetSize(){
+
+    switch(this.previewClass.substr(8,this.previewClass.length))
+    {
+      case "small_rect":
+      {
+       return {rows:4, cols:2};
+      }
+      
+    case "small_square":
+      {
+        return {rows:4, cols:4};
+      }
+      
+    case "vertical_rect":
+      {
+        return {rows:2, cols:4};
+      }
+      
+    case "large_square":
+      {
+        return {rows:6, cols:6};
+      }
+      
+    case "large_vertical_rect":
+      {
+        return {rows:6, cols:4};
+      }
+      
+    }
+
   }
 
   processJson(input): any {
@@ -306,7 +373,20 @@ export class CreateWidgetComponent implements OnInit {
 
 
   preview() {
+
+    
+    if(this.previewOptions.widgetType === "bar"){
     let data = this.processData(this.previewData);
+    let adItem = new AdItem(BarChartComponent, data);
+    this.resolveView(adItem);
+    }
+    if(this.previewOptions.widgetType === "pie")
+    {
+      let data=this.processDataForPieChart(this.previewData);
+      let adItem = new AdItem(PieChartComponent, data);
+      this.resolveView(adItem);
+      
+    }
     // let data = this.processData({     
 
     //       "a":[65, 59, 80, 81, 56, 55, 40],
@@ -315,8 +395,23 @@ export class CreateWidgetComponent implements OnInit {
     //   }
     //   );
 
+    
+  }
+
+  getComponent(options, inputData)
+  {
+    if(options.widgetType === "bar"){
+      let data = this.processData(inputData);
     let adItem = new AdItem(BarChartComponent, data);
-    this.resolveView(adItem);
+    return adItem;
+    }
+    if(options.widgetType === "pie")
+    {
+      let data=this.processDataForPieChart(inputData);
+      let adItem = new AdItem(PieChartComponent, data);
+      return adItem;
+      
+    }
   }
 
   // selectAll()
@@ -402,6 +497,37 @@ export class CreateWidgetComponent implements OnInit {
 
   }
 
+  processDataForPieChart(input){
+
+    let labels = [];
+    let data = { labels: [], datasets: [{data:[], backgroundColor:[] }] };
+   let labelSize;
+    for (let key in input.stats) {
+      if(key != "aggregated"){
+      console.log(key);
+      // labels.push(key);
+      labelSize = input.stats[key].length;
+      data.labels.push(key);
+      data.datasets[0].data.push(input.stats[key].total);
+      data.datasets[0].backgroundColor.push(this.randomHexColor());
+      }
+    }
+
+    let options = {
+      responsive: true,
+      maintainAspectRatio: true,
+      legend: {
+        display: false,
+        position: 'bottom',
+        labels: {
+          fontColor: "#000080",
+        }
+      }
+    }
+
+    return {data, options};
+
+  }
   randomHexColor(): String {
 
     return "#000000".replace(/0/g, function () { return (~~(Math.random() * 16)).toString(16); });;
