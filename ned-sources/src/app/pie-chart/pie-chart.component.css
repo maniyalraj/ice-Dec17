@@ -20,3 +20,7 @@ span {
 /* li {
     display:  flex;
 } */
+
+.pie > div {
+    height: 65%;
+}

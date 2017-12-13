@@ -471,7 +471,7 @@ export class CreateWidgetComponent implements OnInit {
 
     let options = {
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       legend: {
         display: false,
         position: 'bottom',
