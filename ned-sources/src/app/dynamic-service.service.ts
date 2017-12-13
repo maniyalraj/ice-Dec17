@@ -102,6 +102,15 @@ export class DynamicServiceService {
     )
   }
 
+  // createUser(roleId, userName ): Observable<any> {
+  //   let formData = new FormData();
+  //   formData.append("roleId", roleId);
+  //   formData.append("username", userName);
+  //   return this.http.post('http://woi-lt-259:8080/ice/user/save', formData).map((response)=> {
+  //     return response.json();
+  //   })
+  //} 
+
   
 
     // getApi(url): Response{

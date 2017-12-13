@@ -71,7 +71,7 @@ export class CreateWidgetComponent implements OnInit {
     this.widgetType.push({ label: 'Pie', value: 'pie' });
     this.widgetType.push({ label: 'Table', value: 'table' });
 
-    // For Group By
+
     this.groupby = [];
     this.groupby.push({ label: 'Operation', value: 'Operation' });
     this.groupby.push({ label: 'Account', value: 'Account' });
@@ -79,19 +79,19 @@ export class CreateWidgetComponent implements OnInit {
     this.groupby.push({ label: 'Product', value: 'Product' });
     this.groupby.push({ label: 'Usage Type', value: 'UsageType' });
 
-    // For limit
+
     this.limit = [];
     this.limit.push({ label: 'Top', value: 'Top' });
     this.limit.push({ label: 'Bottom', value: 'Bottom' });
 
-    // For agreegate
+
     this.Agreegate = [];
     this.Agreegate.push({ label: 'Hourly', value: 'hourly' });
     this.Agreegate.push({ label: 'Daily', value: 'daily' });
     this.Agreegate.push({ label: 'Weekly', value: 'weekly' });
     this.Agreegate.push({ label: 'Monthly', value: 'monthly' });
 
-    //For Account Data
+
     this.dropDownService.getAccounts().subscribe((result) => {
       this.acc = this.formatDropDownJson(result.data);
       this.onAccountChange();
@@ -112,11 +112,11 @@ export class CreateWidgetComponent implements OnInit {
   }
 
   changeClass(className) {
-    
-    try{
-    this.preview();
+
+    try {
+      this.preview();
     }
-    catch(error){
+    catch (error) {
 
     }
     switch (className) {
@@ -220,10 +220,6 @@ export class CreateWidgetComponent implements OnInit {
 
   getData() {
 
-    //Temporary Function
-    // this.selectAll();
-
-
     this.previewOptions = {
       account: this.processInput(this.selectedAccounts),
       aggregate: "stats",
@@ -261,57 +257,72 @@ export class CreateWidgetComponent implements OnInit {
     })
   }
 
-  saveData()
-  {
-    let widgets=[];
-    let widget={};
-    widget["id"]=1;
-    widget["options"]=this.previewOptions;
-    widget["size"]=this.getWidgetSize();
+  saveData() {
+    let widgets = [];
+    let widget = {};
+    widget["id"] = 1;
+    widget["options"] = this.previewOptions;
+    widget["size"] = this.getWidgetSize();
     widgets.push(widget);
 
-    if(localStorage.getItem("Widgets")==null)
-    {
-    localStorage.setItem("Widgets",JSON.stringify(widgets));
+    if (localStorage.getItem("Widgets") == null) {
+      localStorage.setItem("Widgets", JSON.stringify(widgets));
     }
-    else
-    {
-      let widgets=JSON.parse(localStorage.getItem("Widgets"));
+    else {
+      let widgets = JSON.parse(localStorage.getItem("Widgets"));
       widgets.push(widget)
-      localStorage.setItem("Widgets",JSON.stringify(widgets));
+      localStorage.setItem("Widgets", JSON.stringify(widgets));
     }
-  
+
   }
+ 
+  preview() {
+    
+    
+        if (this.previewOptions.widgetType === "bar") {
+          let data = this.processData(this.previewData);
+          let adItem = new AdItem(BarChartComponent, data);
+          this.resolveView(adItem);
+        }
+        if (this.previewOptions.widgetType === "pie") {
+          let data = this.processDataForPieChart(this.previewData);
+          let adItem = new AdItem(PieChartComponent, data);
+          this.resolveView(adItem);
+    
+        }
+    
+      }
+    
 
-  getWidgetSize(){
 
-    switch(this.previewClass.substr(8,this.previewClass.length))
-    {
+  getWidgetSize() {
+
+    switch (this.previewClass.substr(8, this.previewClass.length)) {
       case "small_rect":
-      {
-       return {rows:4, cols:2};
-      }
-      
-    case "small_square":
-      {
-        return {rows:4, cols:4};
-      }
-      
-    case "vertical_rect":
-      {
-        return {rows:2, cols:4};
-      }
-      
-    case "large_square":
-      {
-        return {rows:6, cols:6};
-      }
-      
-    case "large_vertical_rect":
-      {
-        return {rows:6, cols:4};
-      }
-      
+        {
+          return { rows: 4, cols: 2 };
+        }
+
+      case "small_square":
+        {
+          return { rows: 4, cols: 4 };
+        }
+
+      case "vertical_rect":
+        {
+          return { rows: 2, cols: 4 };
+        }
+
+      case "large_square":
+        {
+          return { rows: 6, cols: 6 };
+        }
+
+      case "large_vertical_rect":
+        {
+          return { rows: 6, cols: 4 };
+        }
+
     }
 
   }
@@ -372,65 +383,10 @@ export class CreateWidgetComponent implements OnInit {
   }
 
 
-  preview() {
 
-    
-    if(this.previewOptions.widgetType === "bar"){
-    let data = this.processData(this.previewData);
-    let adItem = new AdItem(BarChartComponent, data);
-    this.resolveView(adItem);
-    }
-    if(this.previewOptions.widgetType === "pie")
-    {
-      let data=this.processDataForPieChart(this.previewData);
-      let adItem = new AdItem(PieChartComponent, data);
-      this.resolveView(adItem);
-      
-    }
-    // let data = this.processData({     
+  
 
-    //       "a":[65, 59, 80, 81, 56, 55, 40],
-    //       "b": [28, 48, 40, 19, 86, 27, 90]
-
-    //   }
-    //   );
-
-    
-  }
-
-  getComponent(options, inputData)
-  {
-    if(options.widgetType === "bar"){
-      let data = this.processData(inputData);
-    let adItem = new AdItem(BarChartComponent, data);
-    return adItem;
-    }
-    if(options.widgetType === "pie")
-    {
-      let data=this.processDataForPieChart(inputData);
-      let adItem = new AdItem(PieChartComponent, data);
-      return adItem;
-      
-    }
-  }
-
-  // selectAll()
-  // {
-  //   this.selectedAccounts=this.acc;
-  //   this.selectedRegions=this.reg;
-  //   this.selectedProducts=this.prod;
-  //   this.selectedOperations=this.opera;
-  //   this.selectedUsageType=this.usageType;
-  // }
-
-  resolveView(adItem) {
-    let componentFactory = this.componentFactoryResolver.resolveComponentFactory(adItem.component);
-    let viewContainerRef = this.adHost.viewContainerRef;
-    viewContainerRef.clear();
-
-    let componentRef = viewContainerRef.createComponent(componentFactory);
-    (<AdComponent>componentRef.instance).data = adItem.data;
-  }
+ 
 
   processData(input) {
     let labels = [];
@@ -497,19 +453,19 @@ export class CreateWidgetComponent implements OnInit {
 
   }
 
-  processDataForPieChart(input){
+  processDataForPieChart(input) {
 
     let labels = [];
-    let data = { labels: [], datasets: [{data:[], backgroundColor:[] }] };
-   let labelSize;
+    let data = { labels: [], datasets: [{ data: [], backgroundColor: [] }] };
+    let labelSize;
     for (let key in input.stats) {
-      if(key != "aggregated"){
-      console.log(key);
-      // labels.push(key);
-      labelSize = input.stats[key].length;
-      data.labels.push(key);
-      data.datasets[0].data.push(input.stats[key].total);
-      data.datasets[0].backgroundColor.push(this.randomHexColor());
+      if (key != "aggregated") {
+        console.log(key);
+        // labels.push(key);
+        labelSize = input.stats[key].length;
+        data.labels.push(key);
+        data.datasets[0].data.push(input.stats[key].total);
+        data.datasets[0].backgroundColor.push(this.randomHexColor());
       }
     }
 
@@ -521,18 +477,53 @@ export class CreateWidgetComponent implements OnInit {
         position: 'bottom',
         labels: {
           fontColor: "#000080",
+        },
+       legendCallback:function(chart) {
+          var text = [];
+          console.log("...Legend CallBack...")
+          text.push('<div>');
+          for (var i = 0; i < chart.data.datasets.length; i++) {
+            text.push('<li><span style="background-color:#333">');
+            text.push(chart.data.datasets[i].label)
+            text.push('</span></li>');
+          }
+          text.push('</div>');
+          return text.join("");
         }
       }
     }
 
-    return {data, options};
+    return { data, options };
 
   }
+
   randomHexColor(): String {
 
     return "#000000".replace(/0/g, function () { return (~~(Math.random() * 16)).toString(16); });;
   }
+  
+  resolveView(adItem) {
+    let componentFactory = this.componentFactoryResolver.resolveComponentFactory(adItem.component);
+    let viewContainerRef = this.adHost.viewContainerRef;
+    viewContainerRef.clear();
 
+    let componentRef = viewContainerRef.createComponent(componentFactory);
+    (<AdComponent>componentRef.instance).data = adItem.data;
+  }
+
+  getComponent(options, inputData) {
+    if (options.widgetType === "bar") {
+      let data = this.processData(inputData);
+      let adItem = new AdItem(BarChartComponent, data);
+      return adItem;
+    }
+    if (options.widgetType === "pie") {
+      let data = this.processDataForPieChart(inputData);
+      let adItem = new AdItem(PieChartComponent, data);
+      return adItem;
+
+    }
+  }
 }
 export class ModelComponent {
 

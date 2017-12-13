@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DynamicServiceService } from '../../../dynamic-service.service';
 import { forEach } from '@angular/router/src/utils/collection';
 import { Router } from '@angular/router';
+import { MAT_SELECT_SCROLL_STRATEGY_PROVIDER } from '@angular/material';
 
 @Component({
   selector: 'app-manage-dashboards',
@@ -16,6 +17,11 @@ export class ManageDashboardsComponent implements OnInit {
      constructor(private dynamicService: DynamicServiceService, private router: Router) { }
 
       ngOnInit() {
+
+        // this.dynamicService.createUser("111","Raj").subscribe((result)=>{
+        //   console.log(result);
+        // });
+
         var a= [{
           Name: "EC2 Analysis",
           Owner: "Justin Franks",
