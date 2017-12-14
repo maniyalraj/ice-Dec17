@@ -16,3 +16,9 @@ cursor: pointer;
 .confirmButton :hover{
     background: #2399e5  !important;
 }
+.sidebar_panel{padding-top:30px;}
+
+form{border-top:1px solid #ccc;padding: 12px;}
+.btn{padding:6px;margin-right:12px;}
+.btn:hover{border: 1px solid #009dd9;
+    background: #009dd9;color:#fff;}
