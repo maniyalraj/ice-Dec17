@@ -25,7 +25,13 @@ export class PieChartComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
 
+    try{
     this.callMe();
+    }
+    catch(error)
+    {
+      
+    }
     // if (this.legend.nativeElement.innerHtml === undefined)
     //   this.generateLegend(this.chart);
   }

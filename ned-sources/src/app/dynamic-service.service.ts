@@ -96,10 +96,30 @@ export class DynamicServiceService {
   }
 
   getDashboards(): Observable<any> {
-    return this.http.get("./assets/dashboards.json").map((response) => {
+    
+    return this.http.post("http://woi-lt-259:8080/ice/userDashboard/index",{}).map((response) => {
       return response.json();
     }
     )
+  }
+
+
+  apiGet(url, data): any {
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/form-data');
+    url = environment.serverIpAddress + "/dashboard/" + url + "?" + data;
+    return this.http.get(url).map((response) => {
+      return response.json();
+    })
+  }
+
+  apiPost(url, data): any {
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/form-data');
+    url = environment.serverIpAddress + "/dashboard/" + url;
+    return this.http.post(url, data, new RequestOptions({ headers: headers })).map((response) => {
+      return response.json();
+    })
   }
 
   // createUser(roleId, userName ): Observable<any> {

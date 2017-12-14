@@ -12,7 +12,7 @@ import { MAT_SELECT_SCROLL_STRATEGY_PROVIDER } from '@angular/material';
 export class ManageDashboardsComponent implements OnInit {
 
   
-    cars: Array<object>;
+    dashboards: Array<object>;
     selectedDashboard:any;
      constructor(private dynamicService: DynamicServiceService, private router: Router) { }
 
@@ -22,43 +22,43 @@ export class ManageDashboardsComponent implements OnInit {
         //   console.log(result);
         // });
 
-        var a= [{
-          Name: "EC2 Analysis",
-          Owner: "Justin Franks",
-          //Action: "<i class=\'fa fa-files-o\' ></i>"
-          //Action: ""
-        },
-        {
-          Name: "EC2 Savings",
-          Owner: "sanjivani",
-         // Action: "red"
-        },
-        {
-          Name: "Justin Franks Dashboard",
-          Owner: "Justin Franks",
-          //Action: "red"
-        },
-        {
-          Name: "EC2 Reservations",
-          Owner: "Shoeb",
-          //Action: "red"
-        },
-        {
-          Name: " Finance (Cost)",
-          Owner: "Justin Franks",
-         // Action: "red"
-        },
-        {
-          Name: "Operations (Usage)",
-          Owner: "rajendra",
-         // Action: "red"
-        },
-        {
-          Name: "red",
-          Owner: "Mangesh",
-         // Action: "red"
-        }];
-        this.cars=a;
+        // var a= [{
+        //   Name: "EC2 Analysis",
+        //   Owner: "Justin Franks",
+        //   //Action: "<i class=\'fa fa-files-o\' ></i>"
+        //   //Action: ""
+        // },
+        // {
+        //   Name: "EC2 Savings",
+        //   Owner: "sanjivani",
+        //  // Action: "red"
+        // },
+        // {
+        //   Name: "Justin Franks Dashboard",
+        //   Owner: "Justin Franks",
+        //   //Action: "red"
+        // },
+        // {
+        //   Name: "EC2 Reservations",
+        //   Owner: "Shoeb",
+        //   //Action: "red"
+        // },
+        // {
+        //   Name: " Finance (Cost)",
+        //   Owner: "Justin Franks",
+        //  // Action: "red"
+        // },
+        // {
+        //   Name: "Operations (Usage)",
+        //   Owner: "rajendra",
+        //  // Action: "red"
+        // },
+        // {
+        //   Name: "red",
+        //   Owner: "Mangesh",
+        //  // Action: "red"
+        // }];
+        // this.dashboards=a;
         
         
         //this.carService.getCarsSmall().then(cars => this.cars1 = cars);
@@ -74,7 +74,7 @@ export class ManageDashboardsComponent implements OnInit {
               temp.push({Name:result[i].title, Owner:result[i].username, id:result[i].id});
             }
             console.log(temp);
-            this.cars=temp;
+            this.dashboards=temp;
           }
         )
         
@@ -93,14 +93,14 @@ export class ManageDashboardsComponent implements OnInit {
       console.log("Removing Dashboard...");
       //console.log(data);
 
-      for(let i=0; i<this.cars.length; i++)
+      for(let i=0; i<this.dashboards.length; i++)
       {
                 
-        if(data.id === this.cars[i]["id"])
+        if(data.id === this.dashboards[i]["id"])
         {
-          console.log(this.cars[i]["id"]);
-          this.cars.splice(i,1);
-          console.log(this.cars);
+          console.log(this.dashboards[i]["id"]);
+          this.dashboards.splice(i,1);
+          console.log(this.dashboards);
           console.log(dt);
          
         }

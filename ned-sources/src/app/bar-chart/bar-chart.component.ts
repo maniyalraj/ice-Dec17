@@ -1,11 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input,ViewEncapsulation } from '@angular/core';
 import { AdComponent } from '../ad.component';
+
 
 
 @Component({
     selector: 'app-bar-chart',
     templateUrl: './bar-chart.component.html',
-    styleUrls: ['./bar-chart.component.css']
+    styleUrls: ['./bar-chart.component.css'],
+    encapsulation: ViewEncapsulation.None
 })
 export class BarChartComponent implements AdComponent {
 
