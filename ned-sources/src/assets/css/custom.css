@@ -586,4 +586,9 @@ table.table th{color:#00aeef;}
 :none}
 .main-menu li:hover a.active{background:#333645 ;color:#fff;text-decoration
 	:none}
- 
+	.ui-sidebar-left h2{font-size:17px;color: #009dd9;}
+	.ui-sidebar-left .fa-close{position:absolute;right: 8px;
+		top: 13px;color:#a5a5a5;}
+	.ui-sidebar-left .header{padding: 12px;}
+	.ui-sidebar{padding:0px !important;}
+	.ui-sidebar-left{top:99px !important;}
