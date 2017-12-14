@@ -1,9 +1,5 @@
-.bar-chart div{
-    height: 100%;
-    width: 100%
+.bar-chart > div {
+    height: 75%;
+ 
 }
 
-.bar-chart{
-    height: 100%;
-    width: 100%
-}

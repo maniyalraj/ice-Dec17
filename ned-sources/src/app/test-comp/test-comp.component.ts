@@ -27,26 +27,24 @@ export class TestCompComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.process();
+    
+    let createWidget = new CreateWidgetComponent(this.dropDownService, this.componentFactoryResolver);
+    let widgets = JSON.parse(localStorage.getItem("Widgets"));
+    let options;
+
+       
+      options= widgets[this.index-1].options;
+   
+   
+    this.dropDownService.getData(options).subscribe((result) => {
+    let adItem = createWidget.getComponent(options, result);
+    this.resolveView(adItem);
+    })
 
   }
 
   process() {
-      let createWidget = new CreateWidgetComponent(this.dropDownService, this.componentFactoryResolver);
-      let widgets = JSON.parse(localStorage.getItem("Widgets"));
-      let options;
-
-      for(let i=0; i<widgets.length; i++)
-      {
-        
-        options= widgets[i].options;
-      }
-
-     
-      this.dropDownService.getData(options).subscribe((result) => {
-      let adItem = createWidget.getComponent(options, result);
-      this.resolveView(adItem);
-      })
+      
   }
 
   resolveView(adItem) {
