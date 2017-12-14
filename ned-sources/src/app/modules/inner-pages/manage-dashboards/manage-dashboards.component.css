@@ -8,3 +8,11 @@
 {
 cursor: pointer;
 }
+
+.confirmButton{
+    background: #2399e5  !important;
+}
+
+.confirmButton :hover{
+    background: #2399e5  !important;
+}

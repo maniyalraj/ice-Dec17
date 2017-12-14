@@ -97,10 +97,18 @@ export class DynamicServiceService {
 
   getDashboards(): Observable<any> {
     
-    return this.http.post("http://woi-lt-259:8080/ice/userDashboard/index",{}).map((response) => {
+    return this.http.post("http://woi-lt-259:9090/ice/userDashboard/index",{}).map((response) => {
       return response.json();
     }
     )
+  }
+
+  deleteDashboard(data): Observable<any>{
+  
+    return this.http.delete('http://woi-lt-259:9090/ice/userDashboard/delete/'+data).map((response) => {
+    return response.json();
+  }
+  )
   }
 
 

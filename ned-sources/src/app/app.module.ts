@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
-import { ChartModule, CalendarModule, DropdownModule, RadioButtonModule, SpinnerModule, OverlayPanelModule, MultiSelectModule, DataTableModule, SharedModule, TooltipModule} from 'primeng/primeng';
+import { ChartModule, CalendarModule, DropdownModule, RadioButtonModule, SpinnerModule, OverlayPanelModule, MultiSelectModule, DataTableModule, SharedModule, TooltipModule, ConfirmDialogModule} from 'primeng/primeng';
 import { AppRoutingModule } from './app.routing.module';
 import { LoginModule } from './modules/login/login.module';
 import { ProgrammingServicesModule } from './modules/programming-services/programming-services.module';
@@ -52,6 +52,7 @@ import { PieChartComponent } from './pie-chart/pie-chart.component';
 
 import {SidebarModule} from './modules/inner-pages/create-widget/sidebar';
 import { DropDownService } from './services/drop-down.service';
+import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,8 @@ import { DropDownService } from './services/drop-down.service';
     DataTableModule,
     SharedModule,
     TooltipModule,
-    SidebarModule
+    SidebarModule,
+    ConfirmDialogModule
 
     // DynamicModule.withComponents([ViewHolderComponent])
   ],
@@ -109,7 +111,8 @@ import { DropDownService } from './services/drop-down.service';
     ProgServService,
     LookupService,
     DynamicServiceService,
-    DropDownService
+    DropDownService,
+    ConfirmationService
   ],
   entryComponents:[FirstComponentComponent,ToPumpComponent,ViewHolderComponent,BarChartComponent,PieChartComponent],
   bootstrap: [AppComponent]
