@@ -1,37 +1,38 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnChanges } from '@angular/core';
 
 
-import {GridsterItem} from './lib/index';
-import {GridsterConfigS} from './lib/gridsterConfigS.interface';
+import { GridsterItem } from './lib/index';
+import { GridsterConfigS } from './lib/gridsterConfigS.interface';
 
-import {GridsterConfig} from 'angular-gridster2'
-import { ActivatedRoute,Router } from '@angular/router';
+import { GridsterConfig } from 'angular-gridster2'
+import { ActivatedRoute, Router } from '@angular/router';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { DynamicServiceService } from '../dynamic-service.service';
 
 @Component({
   selector: 'app-ice-grid',
   templateUrl: './ice-grid.component.html',
   styleUrls: ['./ice-grid.component.css']
 })
-export class IceGridComponent implements OnInit,OnChanges, OnDestroy {
+export class IceGridComponent implements OnInit, OnChanges, OnDestroy {
 
   options: GridsterConfigS;
   dashboard: Array<GridsterItem>;
-  id:any;
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  id: any;
+  dashboardTitle: any;
+  constructor(private route: ActivatedRoute, private router: Router, private dynamicService: DynamicServiceService) { }
 
-  
+
 
   ngOnInit() {
     let sub = this.route.params.subscribe(params => {
       console.log("ID==");
       console.log(params['id']); // (+) converts string 'id' to a number
-      this.id=params['id'];
+      this.id = params['id'];
       // In a real app: dispatch action to load the details here.
-   });
- 
 
-    
+
+    });
 
     this.options = {
       gridType: 'fixed',//fit
@@ -103,53 +104,34 @@ export class IceGridComponent implements OnInit,OnChanges, OnDestroy {
       pushItems: true,
       disablePushOnDrag: false,
       disablePushOnResize: false,
-      pushDirections: {north: true, east: true, south: true, west: true},
+      pushDirections: { north: true, east: true, south: true, west: true },
       pushResizeItems: false,
       displayGrid: 'onDrag&Resize',
       disableWindowResize: false
     };
 
-    if(localStorage.getItem('dashBoardPerference')==null){
+    this.dynamicService.getSingleDashboard(this.id).subscribe((result) => {
+      this.dashboardTitle = result.title;
+      let data = { "dashboardId": this.id };
 
-      if(this.id==1)
-      {
-    // this.dashboard = [
-    //   {cols: 2, rows: 1, y: 0, x: 0 , chartId:1},
-    //   {cols: 4, rows: 4, y: 0, x: 2, chartId:2},
-    //   {cols: 2, rows: 2, y: 2, x: 0, chartId:3}
-    // ];
+      this.dynamicService.getWidgets(data).subscribe((result) => {
 
-    let dashboards= JSON.parse(localStorage.getItem("Widgets"));
-     this.dashboard=[];
+        this.dashboard = []
 
-    for (let i=0; i<dashboards.length; i++)
-    {
-      this.dashboard.push({
-        cols:dashboards[i].size.cols,
-        rows:dashboards[i].size.rows,
-        chartId: dashboards[i].id
-      });
-    }
+        for (let i = 0; i < result.length; i++) {
+          this.dashboard.push({
+            cols: result[i].columnSize,
+            rows: result[i].rowSize,
+            chartId: result[i].id,
+            x: result[i].xPosition,
+            y:result[i].yPosition,
+          });
+        }
 
-    }
-    else if(this.id==2)
-    {
-      this.dashboard=[{cols: 2, rows: 1, y: 0, x: 0 , chartId:1},
-        {cols: 4, rows: 4, y: 0, x: 2, chartId:2},
-        {cols: 1, rows: 1, y: 0, x: 4,chartId:3}]
 
-    }
-    else
-    {
-      this.router.navigate(["/**"]);
-    }
-  }
-  else{
-    this.dashboard=JSON.parse(localStorage.getItem('dashBoardPerference'));
-  }
+      })
 
-    console.log("-------------------");
-    console.log(this.dashboard);
+    })
   }
 
   changedOptions() {
@@ -167,12 +149,12 @@ export class IceGridComponent implements OnInit,OnChanges, OnDestroy {
 
 
   static eventStop(item, itemComponent, event) {
-  //  console.info('eventStop', item, itemComponent, event);
+    //  console.info('eventStop', item, itemComponent, event);
   }
 
   static itemChange(item, itemComponent) {
     console.info('itemChanged', item, itemComponent);
-    
+   
   }
 
   static itemResize(item, itemComponent) {
@@ -195,23 +177,36 @@ export class IceGridComponent implements OnInit,OnChanges, OnDestroy {
     this.dashboard.push(item);
   }
 
-  savePreference(dashboard)
-  {
-    console.log("preference Saved");
-    console.log(dashboard);
-    localStorage.setItem("dashBoardPerference",JSON.stringify(dashboard));
-    
+  updateDashboardTitle() {
+    let data = {
+      "title": this.dashboardTitle,
+      "user": 1
+    }
+    this.dynamicService.updateDashboardTitle(this.id, data).subscribe((result) => {
+      console.log("Title Updated");
+    });
   }
 
-  ngOnChanges(){
+  createWidget() {
+    this.router.navigate(['./create-widget', { "dashboardId": this.id, "widgetId": 1 }]);
+  }
+
+  savePreference(dashboard) {
+    console.log("preference Saved");
+    console.log(dashboard);
+    localStorage.setItem("dashBoardPerference", JSON.stringify(dashboard));
+
+  }
+
+  ngOnChanges() {
     console.log("----->");
     console.log(this.dashboard);
 
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     console.log("-----XX");
     console.log(this.dashboard);
-    localStorage.setItem("dashBoardPerference",JSON.stringify(this.dashboard));
+    localStorage.setItem("dashBoardPerference", JSON.stringify(this.dashboard));
   }
 }

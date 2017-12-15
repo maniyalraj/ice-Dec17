@@ -9,6 +9,7 @@ import { AdComponent } from '../ad.component';
 import { BarChartComponent } from '../bar-chart/bar-chart.component';
 import { DropDownService } from '../services/drop-down.service';
 import { CreateWidgetComponent } from '../modules/inner-pages/create-widget/create-widget.component';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class TestCompComponent implements OnInit {
   @ViewChild(DynamicDirective) adHost: DynamicDirective;
   ads: AdItem[];
   test: string = "before";
+  widgetName : any;
   component = ViewHolderComponent;
    constructor(private dynamicService: DynamicServiceService, private componentFactoryResolver: ComponentFactoryResolver, private dropDownService: DropDownService) {
 
@@ -28,17 +30,27 @@ export class TestCompComponent implements OnInit {
 
   ngOnInit() {
     
-    let createWidget = new CreateWidgetComponent(this.dropDownService, this.componentFactoryResolver);
-    let widgets = JSON.parse(localStorage.getItem("Widgets"));
+    let createWidget = new CreateWidgetComponent(this.dropDownService, this.componentFactoryResolver, new ActivatedRoute(), this.dynamicService);
+    
     let options;
 
+    this.dynamicService.getOneWidget(this.index).subscribe((result)=>{
+      this.widgetName=result.widgetName;
+      options=JSON.parse(result.requestJson)
+        this.dropDownService.getData(options).subscribe((result) => {
+        let adItem = createWidget.getComponent(options, result);
+        this.resolveView(adItem);
+    })
+
+    
+    // let widgets = JSON.parse(localStorage.getItem("Widgets"));
+   
+
        
-      options= widgets[this.index-1].options;
+    //   options= widgets[this.index-1].options;
    
    
-    this.dropDownService.getData(options).subscribe((result) => {
-    let adItem = createWidget.getComponent(options, result);
-    this.resolveView(adItem);
+ 
     })
 
   }
@@ -53,6 +65,14 @@ export class TestCompComponent implements OnInit {
     viewContainerRef.clear();
     let componentRef = viewContainerRef.createComponent(componentFactory);
     (<AdComponent>componentRef.instance).data = adItem.data;
+  }
+
+  deleteWidget(){
+    console.log("Delete widget id:"+this.index);
+  }
+
+  editWidget(){
+    
   }
 
   ngOnChanges(changes: SimpleChange) {

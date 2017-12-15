@@ -16,6 +16,8 @@ export class ManageDashboardsComponent implements OnInit {
   dashboards: Array<object>;
   selectedDashboard: any;
   msgs: any;
+  dashboardName:any;
+
   constructor(private dynamicService: DynamicServiceService, private router: Router, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
@@ -73,7 +75,16 @@ export class ManageDashboardsComponent implements OnInit {
     return confirmation;
   }
 
+saveDashboard(dashboardName){
 
+  let data={"title": dashboardName.value,"user":1};
+  this.dynamicService.saveDashboard(data).subscribe((result)=>{
+
+    console.log("DashboardCreated");
+    window.location.reload();
+  });
+
+}
   removeDashboard(data, dt) {
     this.confirm(data, dt)
   }

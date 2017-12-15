@@ -1,108 +1,55 @@
 <!-- <app-test-comp></app-test-comp> -->
 
- 
+
 <button (click)="savePreference(dashboard)">Save View</button>
 
 <mat-sidenav-container class="ice-grid-wrapper">
-    <div class="row">
-      
-        <div class="heading ">
-            <div class="col-md-10"> <input type="text" value="Dashboard"></div>
-          <div class="col-md-2">
-            <div class="create-icon  pull-right" pTooltip="Add Widget" tooltipPosition="left">
-                     <i class="fa fa-plus-circle" aria-hidden="true"></i>
-             </div>
-             </div>
-     </div>
-       
+  <div class="row">
+
+    <div class="heading ">
+      <div class="col-md-10">
+        <input type="text" [(ngModel)]="dashboardTitle" (blur)="updateDashboardTitle()">
       </div>
-      <div class="row">  <div class="dashboard_action_wrapper">
-          <ul class="dashboard_action">
-            <li>
-              <a href="#">
-                <i class="fa fa-share-alt" aria-hidden="true"></i>Share</a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa fa-comment" aria-hidden="true"></i>Annotate </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa fa-files-o" aria-hidden="true"></i>Duplicate</a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa fa-trash-o" aria-hidden="true"></i>Delete</a>
-            </li>
-          </ul>
+      <div class="col-md-2">
+        <div class="create-icon  pull-right" pTooltip="Add Widget" tooltipPosition="left" (click)="createWidget()">
+          <i class="fa fa-plus-circle" aria-hidden="true"></i>
         </div>
-        
-          <!-- <gridster [options]="options">
+      </div>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="dashboard_action_wrapper">
+      <ul class="dashboard_action">
+        <li>
+          <a href="#">
+            <i class="fa fa-share-alt" aria-hidden="true"></i>Share</a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa fa-comment" aria-hidden="true"></i>Annotate </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa fa-files-o" aria-hidden="true"></i>Duplicate</a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa fa-trash-o" aria-hidden="true"></i>Delete</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- <gridster [options]="options">
           <gridster-item [item]="item" *ngFor="let item of dashboard">
           </gridster-item>
         </gridster> -->
-      
-        </div>
-      
+
+  </div>
+
   <gridster [options]="options" class="gridster">
-    
-        
     <gridster-item [item]="item" *ngFor="let item of dashboard" class="grid-panel">
-      <div class="grid-header">
-        <div class="widget-title">
-          <h2>Database Chart</h2>
-          <span class="dates">Last 90 days</span>
-        </div>
-        <ul>
-          <li>
-            <a href="#">
-              <i class="fa fa-pencil" aria-hidden="true"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-files-o" aria-hidden="true"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-cloud-download" aria-hidden="true"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-trash-o" aria-hidden="true"></i>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="button-holder">
-        <div class="gridster-item-content" *ngIf="item.chartId" style="width:100%;height:100%">
-
-          <app-test-comp [index]="item.chartId" class="content"></app-test-comp>
-        </div>
-        <!-- <div class="gridster-item-content" *ngIf="item.hasContent">
-          <div class="stuff">
-            <span>Some content to select and click without dragging the widget</span>
-            <a href="https://www.google.com" target="_blank">Link to Google</a>
-          </div>
-        </div> -->
-        <!-- <div class="item-buttons" *ngIf="item.hasContent">
-          <button mat-icon-button mat-raised-button class="drag-handler">
-            <mat-icon>open_with</mat-icon>
-          </button>
-          <button mat-icon-button mat-raised-button class="remove-button" (mousedown)="removeItem($event, item)"
-                  (touchstart)="removeItem($event, item)" matTooltip="Remove">
-            <mat-icon>clear</mat-icon>
-          </button>
-        </div> -->
-        <!-- <label *ngIf="!item.hasContent">{{item.label}}</label>
-        <button mat-mini-fab *ngIf="!item.hasContent" (mousedown)="removeItem($event, item)"
-                (touchstart)="removeItem($event, item)" matTooltip="Remove">
-          <mat-icon>clear</mat-icon>
-        </button> -->
-      </div>
+      <app-test-comp [index]="item.chartId" class="content"></app-test-comp>
     </gridster-item>
   </gridster>
 </mat-sidenav-container>

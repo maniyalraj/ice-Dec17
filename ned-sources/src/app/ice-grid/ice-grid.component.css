@@ -63,6 +63,9 @@ mat-sidenav-container {
     display: flex;
     flex-direction: column;
   }
+  .mat-drawer-content{
+    overflow: hidden !important ;
+  }
 
 
   .ice-grid-wrapper{position: absolute; top: 94px;}

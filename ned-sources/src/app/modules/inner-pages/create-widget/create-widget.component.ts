@@ -9,6 +9,7 @@ import { AdComponent } from '../../../ad.component';
 import { AdItem } from '../../../aditem';
 import { BarChartComponent } from '../../../bar-chart/bar-chart.component';
 import { PieChartComponent } from '../../../pie-chart/pie-chart.component';
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -23,6 +24,10 @@ export class CreateWidgetComponent implements OnInit {
 
   @ViewChild(DynamicDirective) adHost: DynamicDirective;
 
+  dashboardId:any;
+  widgetId:any;
+
+  widgetName:any;
   widgetType: SelectItem[];
   groupby: SelectItem[];
   limit: SelectItem[];
@@ -63,13 +68,23 @@ export class CreateWidgetComponent implements OnInit {
 
 
 
-  constructor(private dropDownService: DropDownService, private componentFactoryResolver: ComponentFactoryResolver) {
+  constructor(private dropDownService: DropDownService, private componentFactoryResolver: ComponentFactoryResolver, private route: ActivatedRoute, private dynamicService: DynamicServiceService) {
 
     this.widgetType = [];
-    this.widgetType.push({ label: 'Widget Type', value: null });
-    this.widgetType.push({ label: 'Bar', value: 'bar' });
-    this.widgetType.push({ label: 'Pie', value: 'pie' });
-    this.widgetType.push({ label: 'Table', value: 'table' });
+
+    this.dropDownService.getWidgetTypes().subscribe((result)=>{
+      
+      for(let i=0; i<result.length;i++)
+      {
+        this.widgetType.push({label: result[i].name, value: result[i].id});
+      }
+
+    })
+
+    // this.widgetType.push({ label: 'Widget Type', value: null });
+    // this.widgetType.push({ label: 'Bar', value: 'bar' });
+    // this.widgetType.push({ label: 'Pie', value: 'pie' });
+    // this.widgetType.push({ label: 'Table', value: 'table' });
 
 
     this.groupby = [];
@@ -109,6 +124,15 @@ export class CreateWidgetComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.dashboardId=  this.route.snapshot.params["dashboardId"];
+    this.widgetId=this.route.snapshot.params["widgetId"];
+  //   let sub = this.route.params.subscribe(params => {
+  //     console.log(params['id']); // (+) converts string 'id' to a number
+  //     this.dashboardId=params['id'];
+  //     // In a real app: dispatch action to load the details here.
+      
+
+  //  });
   }
 
   changeClass(className) {
@@ -221,6 +245,7 @@ export class CreateWidgetComponent implements OnInit {
   getData() {
 
     this.previewOptions = {
+     
       account: this.processInput(this.selectedAccounts),
       aggregate: "stats",
       breakdown: false,
@@ -241,7 +266,7 @@ export class CreateWidgetComponent implements OnInit {
       reg: this.processInput(this.selectedRegions),
       prod: this.processInput(this.selectedProducts),
 
-      selectedRange: this.processInput(this.selectedRange)
+      selectedRange: this.selectedRange
 
     };
 
@@ -258,28 +283,26 @@ export class CreateWidgetComponent implements OnInit {
   }
 
   saveData() {
-    let widgets = [];
-    let widget = {};
-    widget["id"] = 1;
-    widget["options"] = this.previewOptions;
-    widget["size"] = this.getWidgetSize();
-    widgets.push(widget);
 
-    if (localStorage.getItem("Widgets") == null) {
-      localStorage.setItem("Widgets", JSON.stringify(widgets));
-    }
-    else {
-      let widgets = JSON.parse(localStorage.getItem("Widgets"));
-      widgets.push(widget)
-      localStorage.setItem("Widgets", JSON.stringify(widgets));
-    }
+    // let widgets = [];
+    let widget = {};
+    let timePeriod=  Math.ceil(Math.abs(this.previewOptions.selectedRange[0].getTime() - this.previewOptions.selectedRange[1].getTime())/1000/60/60/24);
+    widget["widgetName"]=this.widgetName;
+    widget["dashboard"] = this.dashboardId;
+    widget["widgetMaster"] = this.widgetId;
+    widget["requestJson"] = JSON.stringify(this.previewOptions);
+    widget["rowSize"] = this.getWidgetSize().rows;
+    widget["columnSize"] = this.getWidgetSize().cols;
+    widget["timePeriod"]=timePeriod;  
+    this.dynamicService.saveUpdateWidget(widget).subscribe((result)=>{
+    console.log("Widget Saved");
+    })
 
   }
  
   preview() {
-    
-    
-        if (this.previewOptions.widgetType === "bar") {
+        this.isPreview = !this.isPreview;
+       if (this.previewOptions.widgetType === "bar") {
           let data = this.processData(this.previewData);
           let adItem = new AdItem(BarChartComponent, data);
           this.resolveView(adItem);
@@ -512,16 +535,20 @@ export class CreateWidgetComponent implements OnInit {
   }
 
   getComponent(options, inputData) {
-    if (options.widgetType === "bar") {
+    if (String(options.widgetType).toLowerCase().includes("bar")) {
       let data = this.processData(inputData);
       let adItem = new AdItem(BarChartComponent, data);
       return adItem;
     }
-    if (options.widgetType === "pie") {
+    else if (String(options.widgetType).toLowerCase().includes("pie")) {
       let data = this.processDataForPieChart(inputData);
       let adItem = new AdItem(PieChartComponent, data);
       return adItem;
 
+    } else{
+      let data = this.processData(inputData);
+      let adItem = new AdItem(BarChartComponent, data);
+      return adItem;
     }
   }
 }

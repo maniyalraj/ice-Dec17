@@ -13,7 +13,7 @@
                 </div>
                 <div class="form-group">
                     <label>Title</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" [(ngModel)]="widgetName" [ngModelOptions]="{standalone: true}">
                 </div>
                 <div class="form-group">
                     <label>Range</label>
@@ -74,7 +74,7 @@
                            
                         <div class="preview_widget-header">
                             <div class="widget-title">
-                                <h2>Database Chart</h2>
+                                <h2>{{widgetName}}</h2>
                                 <span class="dates">Last 90 days</span>
                             </div>
                             <ul>
@@ -102,9 +102,10 @@
                         </div>
                        
                         <div class="content" [ngClass]="previewClass">
-                            <!-- <button (click)="preview();isPreview=!isPreview" [hidden]="!isPreview" >Preview</button> -->
+                            <button (click)="preview()" [(hidden)]="!isPreview">Preview</button>
+                            <div [(hidden)]="isPreview">
                             <ng-template ad-host style="width:100%;height:100%"></ng-template>
-                            
+                            </div>
                         </div>
                         
                     </div>

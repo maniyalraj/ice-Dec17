@@ -95,12 +95,63 @@ export class DynamicServiceService {
 
   }
 
+  getSingleDashboard(data): Observable<any> {
+    
+    return this.http.get("http://woi-lt-259:9090/ice/userDashboard/show/"+data).map((response) => {
+      return response.json();
+    }
+    )
+  }
+
+  updateDashboardTitle(id,data):Observable<any>{
+    return this.http.put("http://woi-lt-259:9090/ice/userDashboard/update/"+id,data).map((response) => {
+      return response.json();
+    }
+    )
+  }
+
   getDashboards(): Observable<any> {
     
     return this.http.post("http://woi-lt-259:9090/ice/userDashboard/index",{}).map((response) => {
       return response.json();
     }
     )
+  }
+
+
+  saveUpdateWidget(data):Observable<any>{
+
+    return this.http.post("http://woi-lt-259:9090/ice/widget/save",data).map((response) => {
+      return response.json();
+    }
+    )
+
+  }
+
+  getWidgets(data):Observable<any>{
+    
+        return this.http.post("http://woi-lt-259:9090/ice/widget/index",data).map((response) => {
+          return response.json();
+        }
+        )
+    
+      }
+
+  getOneWidget(data):Observable<any>{
+    
+    return this.http.get("http://woi-lt-259:9090/ice/widget/show/"+data).map((response) => {
+      return response.json();
+    }
+    )
+
+  }
+
+  saveDashboard(data): Observable<any>{
+
+    return this.http.post("http://woi-lt-259:9090/ice/userDashboard/save",data).map((response)=>{
+      return response.json();
+    })
+
   }
 
   deleteDashboard(data): Observable<any>{

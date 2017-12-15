@@ -1,5 +1,5 @@
 
-html, body {margin: 0px; padding: 0px; font-family:"Open Sans",Helvetica,Arial,sans-serif; font-size:14px; height: 100%;}
+html, body {margin: 0px; padding: 0px; font-family:"Open Sans",Helvetica,Arial,sans-serif; font-size:14px; height: 100%;overflow:hidden;}
 
 ul, li {margin: 0px; padding: 0px; list-style: none;}
 
@@ -592,3 +592,6 @@ table.table th{color:#00aeef;}
 	.ui-sidebar-left .header{padding: 12px;}
 	.ui-sidebar{padding:0px !important;}
 	.ui-sidebar-left{top:99px !important;}
+	.mat-drawer-content{
+		overflow: hidden !important ;
+	  }

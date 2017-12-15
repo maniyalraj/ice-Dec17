@@ -137,6 +137,15 @@ export class DropDownService {
     return this.apiPost(url, data);
   }
 
+  getWidgetTypes(){
+
+    return this.http.get("http://woi-lt-259:9090/ice/widgetMaster/index").map((response)=>{
+      return response.json();
+    })
+
+
+  }
+
   getData(input)
   {
     let url="getData";
