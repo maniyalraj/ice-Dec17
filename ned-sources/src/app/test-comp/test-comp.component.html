@@ -35,3 +35,11 @@
         <ng-template ad-host style="width:100%;height:100%"></ng-template>
     </div>
 <!-- </div> -->
+
+<p-confirmDialog #cd style="z-index: 1010"> 
+    
+            <p-footer>
+                    <button class="confirmButton" type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+                    <button class="confirmButton"  type="button" pButton icon="fa-check" label="Yes" (click)="cd.accept()"></button>
+                </p-footer>
+</p-confirmDialog>

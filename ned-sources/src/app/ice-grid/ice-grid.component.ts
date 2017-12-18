@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnChanges, IterableDiffers, DoCheck,SimpleChange,HostListener } from '@angular/core';
 
 
 import { GridsterItem } from './lib/index';
@@ -6,21 +6,41 @@ import { GridsterConfigS } from './lib/gridsterConfigS.interface';
 
 import { GridsterConfig } from 'angular-gridster2'
 import { ActivatedRoute, Router } from '@angular/router';
-import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { OnDestroy, SimpleChanges, AfterViewChecked } from '@angular/core';
 import { DynamicServiceService } from '../dynamic-service.service';
+import { Http } from '@angular/http';
+
+// import { SimpleChange } from '@angular/core/src/change_detection/change_detection_util';
 
 @Component({
   selector: 'app-ice-grid',
   templateUrl: './ice-grid.component.html',
   styleUrls: ['./ice-grid.component.css']
 })
-export class IceGridComponent implements OnInit, OnChanges, OnDestroy {
+export class IceGridComponent implements OnInit, OnChanges, OnDestroy, AfterViewChecked {
 
   options: GridsterConfigS;
   dashboard: Array<GridsterItem>;
   id: any;
   dashboardTitle: any;
-  constructor(private route: ActivatedRoute, private router: Router, private dynamicService: DynamicServiceService) { }
+  differ: any;
+
+
+  @HostListener('window:beforeunload', [ '$event' ])
+  unloadHandler(event) {
+   this.ngOnDestroy();
+  }
+
+
+  constructor(private route: ActivatedRoute, private router: Router, private dynamicService: DynamicServiceService, private differs: IterableDiffers) {
+
+    //this.differ = differs.find([]).create(null);
+   }
+
+  ngDoCheck() {
+    // const change = this.differ.diff(this.dashboard);
+    // console.log(change);
+  }
 
 
 
@@ -31,12 +51,12 @@ export class IceGridComponent implements OnInit, OnChanges, OnDestroy {
       this.id = params['id'];
       // In a real app: dispatch action to load the details here.
 
-
+      
     });
 
     this.options = {
       gridType: 'fixed',//fit
-      compactType: 'none',
+      compactType: 'compactUp&Left',
       itemChangeCallback: IceGridComponent.itemChange,
       itemResizeCallback: IceGridComponent.itemResize,
       itemInitCallback: IceGridComponent.itemInit,
@@ -45,10 +65,10 @@ export class IceGridComponent implements OnInit, OnChanges, OnDestroy {
       outerMargin: true,
       mobileBreakpoint: 640,
       minCols: 1,
-      maxCols: 100,
+      maxCols: 9,
       minRows: 1,
       maxRows: 100,
-      maxItemCols: 100,
+      maxItemCols: 9,
       minItemCols: 1,
       maxItemRows: 100,
       minItemRows: 1,
@@ -56,8 +76,8 @@ export class IceGridComponent implements OnInit, OnChanges, OnDestroy {
       minItemArea: 1,
       defaultItemCols: 1,
       defaultItemRows: 1,
-      fixedColWidth: 200,
-      fixedRowHeight: 200,
+      fixedColWidth: window.innerWidth / 10,
+      fixedRowHeight: window.innerHeight / 10,
       keepFixedHeightInMobile: false,
       keepFixedWidthInMobile: false,
       scrollSensitivity: 10,
@@ -91,7 +111,7 @@ export class IceGridComponent implements OnInit, OnChanges, OnDestroy {
           w: false,
           se: true,
           ne: false,
-          sw: false,
+          sw: true,
           nw: false
         }
       },
@@ -124,7 +144,7 @@ export class IceGridComponent implements OnInit, OnChanges, OnDestroy {
             rows: result[i].rowSize,
             chartId: result[i].id,
             x: result[i].xPosition,
-            y:result[i].yPosition,
+            y: result[i].yPosition,
           });
         }
 
@@ -152,10 +172,43 @@ export class IceGridComponent implements OnInit, OnChanges, OnDestroy {
     //  console.info('eventStop', item, itemComponent, event);
   }
 
-  static itemChange(item, itemComponent) {
-    console.info('itemChanged', item, itemComponent);
-   
+  windowResize(event)
+  {
+    console.log("Window Resized");  
+    this.options.fixedColWidth = window.innerWidth / 10;
+    this.options.fixedRowHeight = window.innerHeight / 10;
+    this.options.api.optionsChanged();
+    this.options.api.resize();
   }
+
+  static itemChange(item, itemComponent) {
+    // console.info('itemChanged', item, itemComponent);
+    // let http:Http=Http.prototype;
+    // let data={
+    //   "rowSize": item.rows,
+    //   "columnSize": item.cols,
+    //   "xPosition": item.x,
+    //   "yPosition": item.y
+    // }
+
+    // let service: DynamicServiceService = new DynamicServiceService(http);
+
+    // service.updateWidget(item.chartId,data).subscribe((result)=>{
+    //   console.log("Widget Preference Updated");
+    //   console.log(result);
+    // })
+
+    itemComponent.gridster.options.fixedColWidth = window.innerWidth / 10;
+    itemComponent.gridster.options.fixedRowHeight = window.innerHeight / 10;
+
+    // let ice: IceGridComponent = IceGridComponent.;
+
+    // ice.updateWidget(item, itemComponent);
+
+    
+
+  }
+
 
   static itemResize(item, itemComponent) {
     console.info('itemResized', item, itemComponent);
@@ -188,7 +241,7 @@ export class IceGridComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   createWidget() {
-    this.router.navigate(['./create-widget', { "dashboardId": this.id, "widgetId": 1 }]);
+    this.router.navigate(['./create-widget', { "dashboardId": this.id, "widgetId": -1 }]);
   }
 
   savePreference(dashboard) {
@@ -198,15 +251,66 @@ export class IceGridComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
-  ngOnChanges() {
+  updateWidget(item, itemComponent) {
+    console.info('itemChanged', item, itemComponent);
+
+    let data = {
+      "rowSize": item.rows,
+      "columnSize": item.cols,
+      "xPosition": item.x,
+      "yPosition": item.y
+    }
+
+    this.dynamicService.updateWidget(item.chartId, data).subscribe((result) => {
+      console.log("Widget Preference Updated");
+      console.log(result);
+    })
+  }
+  
+  ngOnChanges(changes: SimpleChanges) {
     console.log("----->");
     console.log(this.dashboard);
 
+    const name: SimpleChange = changes.dashboard;
+
+    console.log(this.dashboard);
+
+  }
+
+  dashboardChanged()
+  {
+    console.log("---<><> Dashboard has changed");
   }
 
   ngOnDestroy() {
     console.log("-----XX");
     console.log(this.dashboard);
+
+    for(let i=0; i< this.dashboard.length; i++){
+      let data = {
+        "rowSize": this.dashboard[i].rows,
+        "columnSize": this.dashboard[i].cols,
+        "xPosition": this.dashboard[i].x,
+        "yPosition": this.dashboard[i].y
+      }
+      this.dynamicService.updateWidget(this.dashboard[i].chartId, data).subscribe((result) => {
+        console.log("Widget Preference Updated");
+        console.log(result);
+      })
+    }
+    
+
     localStorage.setItem("dashBoardPerference", JSON.stringify(this.dashboard));
   }
+
+
+  
+
+  ngAfterViewChecked(){
+    //console.log(">>>After View Checked");
+  }
+
+
+  
+
 }

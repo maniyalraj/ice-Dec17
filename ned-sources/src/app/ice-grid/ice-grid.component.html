@@ -3,7 +3,7 @@
 
 <button (click)="savePreference(dashboard)">Save View</button>
 
-<mat-sidenav-container class="ice-grid-wrapper">
+<mat-sidenav-container class="ice-grid-wrapper" (window:resize)="windowResize($event)">
   <div class="row">
 
     <div class="heading ">
@@ -46,7 +46,9 @@
         </gridster> -->
 
   </div>
+  <!-- <span style:"display:none" [(ngModel)]="dashboard" (change)="dashboardChanged()"> 
 
+  </span> -->
   <gridster [options]="options" class="gridster">
     <gridster-item [item]="item" *ngFor="let item of dashboard" class="grid-panel">
       <app-test-comp [index]="item.chartId" class="content"></app-test-comp>

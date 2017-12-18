@@ -1,1 +1,2 @@
-<p-chart type="bar" [data]="data.data" [options]="data.options" style="width:100%; height:100%" class='bar-chart'></p-chart>
+<p-chart type="bar" [data]="data.data" [options]="data.options" style="width:100%; height:100%" class='bar-chart' #chart></p-chart>
+<div class="legend" #legend [innerHtml]="customLegend" (click)="onLegendClick(chart,$event)"></div>

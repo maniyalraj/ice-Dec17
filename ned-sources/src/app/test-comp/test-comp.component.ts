@@ -10,6 +10,8 @@ import { BarChartComponent } from '../bar-chart/bar-chart.component';
 import { DropDownService } from '../services/drop-down.service';
 import { CreateWidgetComponent } from '../modules/inner-pages/create-widget/create-widget.component';
 import { ActivatedRoute } from '@angular/router';
+import { ConfirmationService } from 'primeng/components/common/confirmationservice';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -23,23 +25,28 @@ export class TestCompComponent implements OnInit {
   ads: AdItem[];
   test: string = "before";
   widgetName : any;
+  dashboardId:any;
+
   component = ViewHolderComponent;
-   constructor(private dynamicService: DynamicServiceService, private componentFactoryResolver: ComponentFactoryResolver, private dropDownService: DropDownService) {
+   constructor(private dynamicService: DynamicServiceService, private componentFactoryResolver: ComponentFactoryResolver, 
+    private dropDownService: DropDownService, private confirmationService: ConfirmationService, private router: Router) {
 
   }
 
   ngOnInit() {
     
-    let createWidget = new CreateWidgetComponent(this.dropDownService, this.componentFactoryResolver, new ActivatedRoute(), this.dynamicService);
+    let createWidget = new CreateWidgetComponent(this.dropDownService, this.componentFactoryResolver, new ActivatedRoute(), this.dynamicService, this.router );
     
     let options;
 
     this.dynamicService.getOneWidget(this.index).subscribe((result)=>{
-      this.widgetName=result.widgetName;
-      options=JSON.parse(result.requestJson)
+        this.widgetName=result.widgetName;
+        this.dashboardId= result.dashboard.id;
+        options=JSON.parse(result.requestJson)
         this.dropDownService.getData(options).subscribe((result) => {
         let adItem = createWidget.getComponent(options, result);
         this.resolveView(adItem);
+      
     })
 
     
@@ -68,11 +75,34 @@ export class TestCompComponent implements OnInit {
   }
 
   deleteWidget(){
-    console.log("Delete widget id:"+this.index);
+   
+    this.confirm(this.index);
+
+  }
+
+  confirm(widgetId): boolean {
+    let confirmation = false;
+    this.confirmationService.confirm({
+      message: 'Are you sure that you want to proceed?',
+      header: 'Confirmation',
+      icon: 'fa fa-question-circle',
+      accept: () => {
+        this.dynamicService.deleteWidget(widgetId).subscribe((result)=>{
+          console.log("Widget Deleted"+widgetId);
+        })
+      },
+      reject: () => {
+        
+        confirmation = false;
+      }
+    });
+    return confirmation;
   }
 
   editWidget(){
     
+    this.router.navigate(['./create-widget', { "dashboardId": this.dashboardId, "widgetId": this.index }]);
+
   }
 
   ngOnChanges(changes: SimpleChange) {

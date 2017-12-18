@@ -9,7 +9,8 @@ import { AdComponent } from '../../../ad.component';
 import { AdItem } from '../../../aditem';
 import { BarChartComponent } from '../../../bar-chart/bar-chart.component';
 import { PieChartComponent } from '../../../pie-chart/pie-chart.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 
 
@@ -24,10 +25,10 @@ export class CreateWidgetComponent implements OnInit {
 
   @ViewChild(DynamicDirective) adHost: DynamicDirective;
 
-  dashboardId:any;
-  widgetId:any;
+  dashboardId: any;
+  widgetId: any;
 
-  widgetName:any;
+  widgetName: any;
   widgetType: SelectItem[];
   groupby: SelectItem[];
   limit: SelectItem[];
@@ -59,24 +60,69 @@ export class CreateWidgetComponent implements OnInit {
   selectedGroupBy: any;
   selectedLimit: any;
   selectedAgreegate: any;
-  isCost: boolean;
+  isCost: boolean = true;
   selectedRange: any;
   previewOptions: any;
   previewData: any;
   isPreview: boolean = true;
 
+  updateOptions: any;
+
+  ngOnInit() {
+    this.dashboardId = this.route.snapshot.params["dashboardId"];
+    this.widgetId = this.route.snapshot.params["widgetId"];
+
+    if (this.widgetId) {
+      this.dynamicService.getOneWidget(this.widgetId).subscribe((result) => {
+
+        console.log("Fetching Widget Data....");
+        console.log(result);
+
+        let previewOptions = JSON.parse(result.requestJson);
+
+        this.widgetName = result.widgetName;
+        let tempDate = new Date(previewOptions.selectedRange[0]);
+        let tempDate1 = new Date(previewOptions.selectedRange[1]);
+        var temp: Array<Date> = [tempDate, tempDate1];
+        this.selectedRange = temp;
+        this.selectedwidgetType = previewOptions.widgetType;
+        this.selectedGroupBy = previewOptions.groupBy;
+        this.isCost = previewOptions.isCost;
+        this.selectedLimit = previewOptions.limit;
+        this.selectedAgreegate = previewOptions.consolidate;
+
+        this.selectedAccounts = previewOptions.account.split(",");
+        this.selectedProducts = previewOptions.prod.split(",");
+        this.selectedRegions = previewOptions.region.split(",");
+        //  this.selectedResourceGroup=previewOptions.
+        this.selectedOperations = previewOptions.operation.split(",");
+        this.selectedUsageType = previewOptions.usageType.split(",");
+
+        this.previewOptions = this.processJson(previewOptions);
+        this.preview();
+      });
+
+
+    }
+
+  }
 
 
 
-  constructor(private dropDownService: DropDownService, private componentFactoryResolver: ComponentFactoryResolver, private route: ActivatedRoute, private dynamicService: DynamicServiceService) {
+
+  constructor(private dropDownService: DropDownService,
+    private componentFactoryResolver: ComponentFactoryResolver, private route: ActivatedRoute,
+    private dynamicService: DynamicServiceService, private router: Router
+  ) {
+
+
 
     this.widgetType = [];
 
-    this.dropDownService.getWidgetTypes().subscribe((result)=>{
-      
-      for(let i=0; i<result.length;i++)
-      {
-        this.widgetType.push({label: result[i].name, value: result[i].id});
+    this.dropDownService.getWidgetTypes().subscribe((result) => {
+
+    for (let i = 0; i < result.length; i++) {
+        this.widgetType.push({ label: result[i].name, value: result[i].id + '-' + result[i].name });
       }
 
     })
@@ -123,17 +169,7 @@ export class CreateWidgetComponent implements OnInit {
     return temp;
   }
 
-  ngOnInit() {
-    this.dashboardId=  this.route.snapshot.params["dashboardId"];
-    this.widgetId=this.route.snapshot.params["widgetId"];
-  //   let sub = this.route.params.subscribe(params => {
-  //     console.log(params['id']); // (+) converts string 'id' to a number
-  //     this.dashboardId=params['id'];
-  //     // In a real app: dispatch action to load the details here.
-      
 
-  //  });
-  }
 
   changeClass(className) {
 
@@ -216,15 +252,18 @@ export class CreateWidgetComponent implements OnInit {
   }
 
   onProductsChange() {
-    this.dropDownService.getResourceChange(this.selectedAccounts, this.selectedRegions, this.selectedProducts).subscribe((result) => {
-      this.resourceGroup = this.formatDropDownJson(result.data);
-      this.selectedResourceGroup = this.getIntersection(this.selectedResourceGroup, this.resourceGroup);
-      this.onResourceChange();
-    })
+
+    if (this.selectedAccounts && this.selectedRegions && this.selectedProducts)
+      this.dropDownService.getResourceChange(this.selectedAccounts, this.selectedRegions, this.selectedProducts).subscribe((result) => {
+        this.resourceGroup = this.formatDropDownJson(result.data);
+        this.selectedResourceGroup = this.getIntersection(this.selectedResourceGroup, this.resourceGroup);
+        this.onResourceChange();
+      })
   }
 
 
   onResourceChange() {
+
 
     this.dropDownService.getOperations(this.selectedAccounts, this.selectedRegions, this.selectedProducts, this.selectedResourceGroup).subscribe((result) => {
       this.opera = this.formatDropDownJson(result.data);
@@ -244,31 +283,17 @@ export class CreateWidgetComponent implements OnInit {
 
   getData() {
 
-    this.previewOptions = {
-     
-      account: this.processInput(this.selectedAccounts),
-      aggregate: "stats",
-      breakdown: false,
-      consolidate: this.selectedAgreegate,
-      end: this.formatDate(this.selectedRange[1]),
-      factorsps: false,
-      family: false,
-      groupBy: this.selectedGroupBy,
-      isCost: this.isCost,
-      operation: this.processInput(this.selectedOperations),
-      region: this.processInput(this.selectedRegions),
-      showsps: false,
-      start: this.formatDate(this.selectedRange[0]),
-      usageType: this.processInput(this.selectedUsageType),
-      usageUnit: "",
-      widgetType: this.selectedwidgetType,
-      limit: this.selectedLimit,
-      reg: this.processInput(this.selectedRegions),
-      prod: this.processInput(this.selectedProducts),
 
-      selectedRange: this.selectedRange
+    // if(this.updateOptions)
+    // {
+    //   this.previewOptions=this.updateOptions;
+    // }
+   this.initializeOptions();
+   
 
-    };
+    if (this.selectedResourceGroup && this.selectedResourceGroup.length > 0) {
+      this.previewOptions["showResourceGroups"] = true;
+    }
 
     this.previewOptions = this.processJson(this.previewOptions);
     console.log(this.previewOptions);
@@ -277,46 +302,109 @@ export class CreateWidgetComponent implements OnInit {
       console.log("Get Data...");
       console.log(result);
       this.previewData = result;
-      this.preview();
-      this.saveData();
+      // this.preview();
+      //this.saveData();
     })
   }
 
   saveData() {
 
-    // let widgets = [];
+    this.initializeOptions();
     let widget = {};
-    let timePeriod=  Math.ceil(Math.abs(this.previewOptions.selectedRange[0].getTime() - this.previewOptions.selectedRange[1].getTime())/1000/60/60/24);
-    widget["widgetName"]=this.widgetName;
+    let timePeriod = Math.ceil(Math.abs(this.selectedRange[0].getTime() - this.selectedRange[1].getTime()) / 1000 / 60 / 60 / 24);
+    widget["widgetName"] = this.widgetName;
     widget["dashboard"] = this.dashboardId;
     widget["widgetMaster"] = this.widgetId;
     widget["requestJson"] = JSON.stringify(this.previewOptions);
     widget["rowSize"] = this.getWidgetSize().rows;
     widget["columnSize"] = this.getWidgetSize().cols;
-    widget["timePeriod"]=timePeriod;  
-    this.dynamicService.saveUpdateWidget(widget).subscribe((result)=>{
-    console.log("Widget Saved");
-    })
+    widget["timePeriod"] = timePeriod;
+
+
+    if (this.widgetId == -1 || this.widgetId === undefined) {
+      this.dynamicService.saveUpdateWidget(widget).subscribe((result) => {
+        console.log("Widget Saved");
+
+        // this.router.navigate(['./create-widget', { "dashboardId": this.id, "widgetId": 1 }]);
+        this.router.navigate(['./dashboard/' + this.dashboardId]);
+      })
+    }
+    else {
+      this.dynamicService.updateWidget(this.widgetId, widget).subscribe((result) => {
+        console.log("Widget Updated");
+
+        // this.router.navigate(['./create-widget', { "dashboardId": this.id, "widgetId": 1 }]);
+        this.router.navigate(['./dashboard/' + this.dashboardId]);
+      })
+
+    }
+
+
 
   }
- 
-  preview() {
-        this.isPreview = !this.isPreview;
-       if (this.previewOptions.widgetType === "bar") {
-          let data = this.processData(this.previewData);
-          let adItem = new AdItem(BarChartComponent, data);
-          this.resolveView(adItem);
-        }
-        if (this.previewOptions.widgetType === "pie") {
-          let data = this.processDataForPieChart(this.previewData);
-          let adItem = new AdItem(PieChartComponent, data);
-          this.resolveView(adItem);
-    
-        }
-    
-      }
-    
 
+  preview() {
+    
+    this.initializeOptions();
+    this.isPreview = !this.isPreview;
+    this.dropDownService.getData(this.previewOptions).subscribe((result) => {
+      console.log("Get Data...");
+      console.log(result);
+      this.previewData = result;
+      // this.preview();
+      //this.saveData();
+      if (this.previewOptions.widgetType.split('-')[1].toLowerCase() === ("bar chart")) {
+        let data = this.processData(this.previewData);
+        let adItem = new AdItem(BarChartComponent, data);
+        this.resolveView(adItem);
+      }
+      else if (this.previewOptions.widgetType.split('-')[1].toLowerCase() === ("pie")) {
+        let data = this.processDataForPieChart(this.previewData);
+        let adItem = new AdItem(PieChartComponent, data);
+        this.resolveView(adItem);
+
+      } else {
+        let data = this.processData(this.previewData);
+        let adItem = new AdItem(BarChartComponent, data);
+        this.resolveView(adItem);
+      }
+
+    })
+
+
+  }
+
+ initializeOptions(){
+  this.previewOptions = {
+    
+          account: this.processInput(this.selectedAccounts),
+          aggregate: "stats",
+          breakdown: false,
+          consolidate: this.selectedAgreegate,
+          end: this.formatDate(this.selectedRange[1]),
+          factorsps: false,
+          family: false,
+          groupBy: this.selectedGroupBy,
+          isCost: this.isCost,
+          operation: this.processInput(this.selectedOperations),
+          region: this.processInput(this.selectedRegions),
+          showsps: false,
+          start: this.formatDate(this.selectedRange[0]),
+          usageType: this.processInput(this.selectedUsageType),
+          usageUnit: "",
+          widgetType: this.selectedwidgetType,
+          limit: this.selectedLimit,
+          reg: this.processInput(this.selectedRegions),
+          prod: this.processInput(this.selectedProducts),
+    
+          selectedRange: this.selectedRange
+    
+    
+    
+        };
+
+        this.previewOptions=this.processJson(this.previewOptions);
+ }
 
   getWidgetSize() {
 
@@ -407,9 +495,9 @@ export class CreateWidgetComponent implements OnInit {
 
 
 
-  
 
- 
+
+
 
   processData(input) {
     let labels = [];
@@ -501,7 +589,7 @@ export class CreateWidgetComponent implements OnInit {
         labels: {
           fontColor: "#000080",
         },
-       legendCallback:function(chart) {
+        legendCallback: function (chart) {
           var text = [];
           console.log("...Legend CallBack...")
           text.push('<div>');
@@ -524,7 +612,7 @@ export class CreateWidgetComponent implements OnInit {
 
     return "#000000".replace(/0/g, function () { return (~~(Math.random() * 16)).toString(16); });;
   }
-  
+
   resolveView(adItem) {
     let componentFactory = this.componentFactoryResolver.resolveComponentFactory(adItem.component);
     let viewContainerRef = this.adHost.viewContainerRef;
@@ -545,7 +633,7 @@ export class CreateWidgetComponent implements OnInit {
       let adItem = new AdItem(PieChartComponent, data);
       return adItem;
 
-    } else{
+    } else {
       let data = this.processData(inputData);
       let adItem = new AdItem(BarChartComponent, data);
       return adItem;

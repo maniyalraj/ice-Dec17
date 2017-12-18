@@ -106,14 +106,63 @@ export class DropDownService {
   }
 
 
-  getResourceChange(accounts, regions, products)
-  {
+  getResourceChange(accounts, regions, products) {
     let url = "getResourceGroups";
-    let data = { "account": this.processInput(accounts), "region": this.processInput(regions), "product": this.processInput(products)};
+    let accountParam = "account=";
+    let regionParam = "region=";
+    let producParam = "product="
+    let data = "";
 
-    data = this.processJson(data);
+    let isContainALLData=false;
 
-    return this.apiPost(url, data);
+    if (accounts != undefined)
+      for (let i = 0; i < accounts.length; i++) {
+        if (i == 0)
+         { 
+           accountParam = accountParam + accounts[i];
+          isContainALLData=true;
+         }
+        else {
+          accountParam = accountParam + "," + accounts[i];
+        }
+      }
+     else{
+      isContainALLData=false;
+     } 
+
+    if (regions != undefined)
+      for (let i = 0; i < regions.length; i++) {
+        if (i == 0)
+          {regionParam = regionParam + regions[i];
+            isContainALLData=true;}
+        else {
+          regionParam = regionParam + "," + regions[i];
+        }
+      }
+      else{
+        isContainALLData=false;
+       }
+
+    if (products != undefined)
+      for (let i = 0; i < products.length; i++) {
+        if (i == 0)
+          {producParam = producParam + products[i];isContainALLData=true;}
+        else {
+          producParam = producParam + "," + products[i];
+        }
+      }
+      else{
+        isContainALLData=false;
+       }
+
+      
+    data = accountParam + "&" + regionParam + "&" + producParam;
+
+    if(isContainALLData)
+    return this.apiGet(url, data);
+
+    else
+    return false;
   }
 
   getOperations(accounts, regions, products, resources) {
@@ -137,20 +186,19 @@ export class DropDownService {
     return this.apiPost(url, data);
   }
 
-  getWidgetTypes(){
+  getWidgetTypes() {
 
-    return this.http.get("http://woi-lt-259:9090/ice/widgetMaster/index").map((response)=>{
+    return this.http.get("http://woi-lt-259:9090/ice/widgetMaster/index").map((response) => {
       return response.json();
     })
 
 
   }
 
-  getData(input)
-  {
-    let url="getData";
-    let data=input;
-  
+  getData(input) {
+    let url = "getData";
+    let data = input;
+
     return this.apiPost(url, data);
 
   }

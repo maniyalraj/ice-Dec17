@@ -11,7 +11,9 @@ import { environment } from '../environments/environment.prod';
 @Injectable()
 export class DynamicServiceService {
 
+
   constructor(private http: Http) { }
+
 
   getData() {
 
@@ -125,7 +127,15 @@ export class DynamicServiceService {
       return response.json();
     }
     )
+    
+  }
 
+  updateWidget(id,data) : Observable<any>{
+
+    return this.http.put("http://woi-lt-259:9090/ice/widget/update/"+id,data).map((response) => {
+      return response.json();
+    }
+    )
   }
 
   getWidgets(data):Observable<any>{
@@ -160,6 +170,14 @@ export class DynamicServiceService {
     return response.json();
   }
   )
+  }
+
+  deleteWidget(widgetId): Observable<any>{
+    
+    return this.http.delete('http://woi-lt-259:9090/ice/widget/delete/'+widgetId).map((response) => {
+      return response.json();
+    }
+    )
   }
 
 
